@@ -75,3 +75,17 @@ const mostrarMateriasPrimas = () => {
         console.log(materiaPrima.nombre, materiaPrima.importePorCantidad(1));
     }
 }
+
+const buscarMateriaPrima = () => {
+    const nombre = prompt("nombre de materia prima");
+
+    const busquedaMateriaPrima = materiasPrimas.find(materiaPrima => {
+        return materiaPrima.nombre.toLowerCase() === nombre.toLowerCase();
+    });
+
+    if (!busquedaMateriaPrima) {
+        throw new Error("materia prima no encontrada");
+    }
+
+    console.log(busquedaMateriaPrima);
+}
