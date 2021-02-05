@@ -15,6 +15,10 @@
             <button onclick="ingresarMateriaPrima()">Ingresar Materia Prima</button>
             <button onclick="mostrarMateriasPrimas()">Mostar Materias Primas</button>
             <button onclick="buscarMateriaPrima()">Buscar Materia Prima</button>
+            <select onchange="filtrarMateriasPrimas(this.value)">
+                <option value="pre-des">Precio Descendiente</option>
+                <option value="pre-asc">Precio Ascendente</option>
+            </select>
         </main>
     </body>
 </html>

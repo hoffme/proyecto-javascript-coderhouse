@@ -72,7 +72,7 @@ const ingresarMateriaPrima = () => {
 
 const mostrarMateriasPrimas = () => {
     for (const materiaPrima of materiasPrimas) {
-        console.log(materiaPrima.nombre, materiaPrima.importePorCantidad(1));
+        console.log(materiaPrima);
     }
 }
 
@@ -88,4 +88,25 @@ const buscarMateriaPrima = () => {
     }
 
     console.log(busquedaMateriaPrima);
+}
+
+const comparacionPorPrecioAscendente = (a, b) => a.precio.precio - b.precio.precio;
+
+const comparacionPorPrecioDescendente = (a, b) => comparacionPorPrecioAscendente(b, a);
+
+const filtrarMateriasPrimas = (value) => {
+    let metodo = undefined;
+    
+    switch (value) {
+        case "pre-des":
+            metodo = comparacionPorPrecioDescendente;
+            break;
+        case "pre-asc":
+            metodo = comparacionPorPrecioAscendente;
+            break;
+        default:
+            throw new Error("metodo de filtrado invalido");
+    }
+
+    materiasPrimas.sort(metodo);
 }
