@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Simulador de Recetas | Productos</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/storage.js"></script>
+        <script src="../js/global.js"></script>
+        <script src="../js/productos.js"></script>
+    </head>
+    <body>
+        <nav id="navegacion"></nav>
+        <main>
+            <div id="menu">
+                <button onclick="ingresarMateriaPrima()">Ingresar Materia Prima</button>
+                <button onclick="mostrarMateriasPrimas()">Mostar Materias Primas</button>
+                <button onclick="buscarMateriaPrima()">Buscar Materia Prima</button>
+                <select onchange="filtrarMateriasPrimas(this.value)">
+                    <option value="pre-des">Precio Descendiente</option>
+                    <option value="pre-asc">Precio Ascendente</option>
+                </select>
+            </div>
+            <section id="seccion"></section>
+        </main>
+    </body>
+</html>
