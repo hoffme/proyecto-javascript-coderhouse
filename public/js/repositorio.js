@@ -8,20 +8,19 @@ class Repositorio {
 
     descargarDatos() {
         this._datos = JSON.parse(localStorage.getItem(this.ruta));
+        if (!this._datos) this._datos = {};
     }
 
     cargarDatos() {
         localStorage.setItem(this.ruta, JSON.stringify(this._datos));
     }
 
-    obtenerId(id) { return this._datos[id] }
-
-    obtenerPor(campo, valor, f_cmp = (objVal, BusVal) => objVal === BusVal) {
-        return this._datos.filter(obj => f_cmp(obj[campo], valor));
+    obtener(valor, filtrado) {
+        return Object.values(this._datos).filter(obj => filtrado(valor, obj));
     }
 
     crear(obj, actualizar = false) {
-        if (actualizar && this._datos[obj.id]) {
+        if (!actualizar && this._datos[obj.id]) {
             throw new Error("Existe un objeto con el id: '" + obj.id + "'");
         }
 
@@ -42,4 +41,12 @@ class Repositorio {
         delete this._datos[obj.id];
         this.cargarDatos();
     }
+}
+
+const REPOSITORIOS = {
+    costos_fijos: new Repositorio('costos-fijos'),
+    empleados: new Repositorio('empleados'),
+    herramientas: new Repositorio('herramientas'),
+    productos: new Repositorio('productos'),
+    recetas: new Repositorio('recetas')
 }
