@@ -6,13 +6,12 @@ const PAGINAS = [
     PAGINA_COSTOS_FIJOS
 ]
 
-window.onload = () => {
-    const raiz = document.getElementById('raiz');
-    const paginas = document.createElement('main');
+$(() => {
+    const paginas = $('<main></main>');
 
     const nav = new Navegacion(paginas);
     PAGINAS.forEach(pagina => nav.agregar(pagina));
     nav.seleccionar(PAGINAS[0].nombre);
 
-    raiz.append(nav.render(), paginas);
-}
+    $("#raiz").prepend(nav.render(), paginas);
+});
