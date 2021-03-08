@@ -236,13 +236,11 @@ class CRUDVista {
             (...p) => this.vistaItemBuscador(...p)
         );
 
-        this.editor = $('<div></div>');
-
+        this.editor = null;
         this.contenedor = $('<div class="crud-vista"></div>')
         this.contenedor.append(
             this.botonCrear(),
-            this.buscador.render(),
-            this.editor
+            this.buscador.render()
         );
     }
 
@@ -256,17 +254,17 @@ class CRUDVista {
     }
 
     cerrarEditor() {
-        this.editor.empty();
-        this.contenedor.removeClass('edicion');
+        const editor = this.editor;
+
+        if (!editor || this.contenedor.children().length <= 2) return;
+        editor.animate({ width: 0 }, "fast", () => editor.remove());
     }
 
     editar(obj = {}) {
-        if (this.contenedor.hasClass('edicion')) this.cerrarEditor();
+        this.cerrarEditor();
 
         const campos = [...this.camposObjeto];
         campos.forEach(campo => campo.valor = obj[campo.nombre]);
-
-        console.log(campos)
 
         const editor = new Editor('Editar', campos)
         editor.alGuardar = datos => {
@@ -281,10 +279,9 @@ class CRUDVista {
             this.buscador.actualizarListado("");
         }
 
-        this.editor.empty();
-        this.editor.append(editor.render());
-
-        this.contenedor.addClass('edicion');
+        this.editor = editor.render();
+        this.contenedor.append(this.editor);
+        this.editor.animate({ width: '100%' }, "fast");
     }
 
     vistaItemBuscador(ctn, obj) {

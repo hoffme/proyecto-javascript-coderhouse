@@ -206,7 +206,6 @@ main .pagina {
     top: 0;
     box-sizing: border-box;
     height: 100%;
-    width: 100%;
     max-width: 500px;
     box-shadow: 1px 1px 5px black;
 }
