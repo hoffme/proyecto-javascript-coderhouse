@@ -1,18 +1,10 @@
-const REPOSITORIOS = {
-    costos_fijos: new Repositorio('costos-fijos'),
-    empleados: new Repositorio('empleados'),
-    herramientas: new Repositorio('herramientas'),
-    productos: new Repositorio('productos'),
-    recetas: new Repositorio('recetas')
-}
-
 class App {
     constructor(idRaiz) {
         this.raiz = $(`#${idRaiz}`);
 
         this.paginas = [
             new PaginaRecetas(),
-            new PaginaProductos(REPOSITORIOS.productos),
+            new PaginaProductos(),
             new PaginaHerramientas(),
             new PaginaEmpleados(),
             new PaginaCostosFijos()

@@ -1,5 +1,5 @@
 class PaginaProductos extends Crud {
-    constructor(repositorio) { super('Productos', repositorio) }
+    constructor() { super('Productos', contexto.repositorios.productos) }
 
     filtroBusqueda(filtro, obj) {
         return obj.nombre.toLowerCase().includes(filtro.query.toLowerCase());
