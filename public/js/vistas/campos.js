@@ -36,7 +36,7 @@ function Switch({titulo, valor, alCambiar}) {
 
     const input = $(`<input type="checkbox" />`);
     if (valor) input.val(valor);
-    if (alCambiar) input.onchange = () => alCambiar(input.val());
+    if (alCambiar) input.change(() => alCambiar(input.prop("checked")));
 
     const switchCtn = $(`<label class="switch">
         <span class="switch-slider"></span>
@@ -52,7 +52,7 @@ function Seleccion({titulo, valor, alCambiar, opciones}) {
     const contenedor = Campo({titulo});
     
     const select = $(`<select class="opciones"></select>`);
-    if (alCambiar) select.change(() => alCambiar(opciones.val()));
+    if (alCambiar) select.change(() => alCambiar(select.val()));
 
     select.prepend('<option disabled selected>Opciones</option>');
 
@@ -62,8 +62,9 @@ function Seleccion({titulo, valor, alCambiar, opciones}) {
                 <option
                     ${opcion.selected ? `selected="${opcion.selected}"` : ''}
                     value="${opcion.valor}"
+                    class="opciones-opcion"
                 >
-                    ${opcion.nombre}
+                    ${opcion.titulo}
                 </option>`
             );
         });
