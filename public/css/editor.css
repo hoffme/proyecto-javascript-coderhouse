@@ -1,0 +1,46 @@
+.editor {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: var(--superficie-1);
+    color: var(--sobre-superficie-1);
+}
+.editor .campos {
+    display: flex;
+    flex-direction: column;
+}
+.editor .campos .campo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+.editor .campos .campo .titulo {
+    width: 30%;
+}
+.editor .campos .campo .input, .editor .campos .campo .opciones {
+    width: 60%;
+    padding: 0.5rem;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid var(--principal);
+    color: var(--sobre-superficie-1);
+}
+.editor .campos .campo .opciones option { background-color: var(--superficie-1) }
+.editor .campos .campo .switch { width: 60% }
+.editor .controles {
+    display: flex;
+    flex-direction: column;
+}
+.editor .controles button {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    font-weight: bold;
+    border: none;
+    color: var(--sobre-superficie-2);
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px var(--sombra-superficie-2);
+}
+.editor .controles .boton-guardar { background-color: var(--principal) }
+.editor .controles .boton-cancelar { background-color: var(--superficie-2) }
+.editor .controles .boton-borrar { background-color: var(--advertencia) }

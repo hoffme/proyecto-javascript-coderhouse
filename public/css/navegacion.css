@@ -1,0 +1,22 @@
+.navegacion {
+    padding: 1rem;
+    box-shadow: 1px 1px 5px var(--sombra-superficie-1);
+    background-color: var(--superficie-1);
+    width: 10rem;
+    display: flex;
+    flex-direction: column;
+}
+.navegacion button {
+    border-radius: 5px;
+    padding: 0.5rem;
+    background-color: transparent;
+    margin: 0.5rem;
+    font-weight: bold;
+    border: none;
+    color: var(--sobre-superficie-1);
+    border: 1px solid var(--sobre-superficie-1);
+}
+.navegacion button.seleccionado {
+    background-color: var(--principal);
+    border: 1px solid transparent;
+}

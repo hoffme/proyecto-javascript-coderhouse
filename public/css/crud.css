@@ -1,0 +1,38 @@
+.crud-vista {
+    flex: 1;
+    display: grid;
+    grid-template-areas:    "creador editor"
+                            "buscador editor";
+    grid-template-columns: 100% 0;
+    grid-template-rows: 4rem calc(100% - 4rem);
+    padding: 1rem;
+}
+.crud-vista.edicion {
+    grid-template-columns: calc(100% - 500px) 500px;
+}
+.crud-vista .buscador {
+    grid-area: buscador;
+}
+.crud-vista .boton-nuevo {
+    grid-area: creador;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--principal);
+    font-weight: bold;
+    border: none;
+    color: var(--sobre-superficie-1);
+    box-shadow: 1px 1px 5px var(--sombra-superficie-1);
+}
+.crud-vista .editor {
+    grid-area: editor;
+    position: absolute;
+    right: 0;
+    top: 0;
+    box-sizing: border-box;
+    height: 100%;
+    max-width: 500px;
+    box-shadow: 1px 1px 5px black;
+}
