@@ -73,3 +73,21 @@ input[type="checkbox"]:checked + .switch-slider {
 input[type="checkbox"]:checked + .switch-slider:before {
     transform: translateX(1.5rem);
 }
+
+.boton {
+    margin: 0;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    background: var(--superficie-1);
+    box-shadow: 1px 1px 3px var(--sombra-superficie-1);
+    color: var(--sobre-superficie-1);
+    font-weight: bold;
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+}
+.boton.boton-principal {
+    background: var(--principal);
+    box-shadow: 1px 1px 3px var(--sombra-principal);
+    color: var(--sobre-principal);
+}

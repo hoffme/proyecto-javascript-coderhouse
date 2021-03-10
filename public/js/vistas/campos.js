@@ -76,3 +76,15 @@ function Seleccion({titulo, valor, alCambiar, opciones}) {
 
     return contenedor;
 }
+
+function Boton({titulo, alClick}) {
+    const boton = $(`<div class="boton">${titulo}</div>`);
+    if (alClick) boton.click(() => alClick());
+    return boton;
+}
+
+function BotonPrincipal({titulo, alClick}) {
+    const boton = Boton({titulo, alClick});
+    boton.addClass('boton-principal');
+    return boton;
+}

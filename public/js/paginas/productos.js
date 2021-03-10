@@ -13,6 +13,8 @@ class PaginaProductos extends Pagina {
             { titulo: 'opcion 3', valor: 2 },
             { titulo: 'opcion 4', valor: 3 },
         ] }));
+        ctn.append(BotonPrincipal({titulo: 'Haceme Click', alClick: () => console.log('hola')}))
+        ctn.append(Boton({titulo: 'No Haceme Click', alClick: () => console.log('chau')}))
 
         return ctn;
     }
