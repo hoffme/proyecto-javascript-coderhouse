@@ -42,11 +42,3 @@ class Repositorio {
         this.cargarDatos();
     }
 }
-
-const REPOSITORIOS = {
-    costos_fijos: new Repositorio('costos-fijos'),
-    empleados: new Repositorio('empleados'),
-    herramientas: new Repositorio('herramientas'),
-    productos: new Repositorio('productos'),
-    recetas: new Repositorio('recetas')
-}
