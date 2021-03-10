@@ -26,17 +26,3 @@ html, body, #raiz {
     flex-direction: row;
     background-color: var(--fondo);
 }
-
-main { flex: 1 }
-main .pagina {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-main .pagina h1 {
-    color: white;
-    margin: 1rem;
-    padding: 0;
-}
