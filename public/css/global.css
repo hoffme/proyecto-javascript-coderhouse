@@ -23,6 +23,6 @@ html, body, #raiz {
 
 #raiz {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     background-color: var(--fondo);
 }
