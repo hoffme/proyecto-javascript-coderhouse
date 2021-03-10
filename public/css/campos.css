@@ -12,7 +12,7 @@
     color: #aaa;
     font-size: 0.75em;
 }
-.campo .input, .campo .opciones {
+.campo.campo-input input, .campo.campo-opciones select {
     padding: 0.5rem;
     font-size: 1em;
     background-color: transparent;
@@ -21,27 +21,32 @@
     color: #aaa;
     border-bottom: 1px solid transparent;
 }
-.campo .input:focus, .campo .opciones:focus {
+.campo.campo-input input:focus, .campo.campo-opciones select:focus {
     outline: none;
     color: white;
     border-bottom: 1px solid var(--principal);
 }
 
-.campo .switch {
+.campo.campo-opciones select option {
+    background-color: var(--superficie-1);
+    color: var(--sobre-superficie-1);
+}
+
+.campo.campo-switch .switch {
     position: relative;
     display: inline-block;
     width: 3rem;
     height: 1.5rem;
     margin: 0.5rem;
 }
-.campo .switch input {
+.campo.campo-switch .switch input {
     opacity: 0;
     padding: 0;
     margin: 0;
     width: 0;
     height: 0;
 }
-.campo .switch-slider {
+.campo.campo-switch .switch-slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -55,7 +60,7 @@
     border-radius: 1.5rem;
     background-color: #00000075;
 }
-.campo .switch-slider:before {
+.campo.campo-switch .switch-slider:before {
     position: absolute;
     content: "";
     height: 1rem;
@@ -75,6 +80,9 @@ input[type="checkbox"]:checked + .switch-slider:before {
 }
 
 .boton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0;
     padding: 0.5rem;
     font-size: 1rem;

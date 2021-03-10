@@ -4,11 +4,13 @@ function Campo({titulo}) {
     return contenedor;
 }
 
-function Input({titulo, valor, tipo = 'text', alCambiar}) {
+function Input({titulo, valor, tipo = 'text', alCambiar, placeholder}) {
     const campo = Campo({titulo});
+    campo.addClass('campo-input');
 
-    const input = $(`<input class="input" type="${tipo}" />`);
+    const input = $(`<input type="${tipo}" />`);
     if (valor) input.val(campo.valor);
+    if (placeholder) input.attr("placeholder", placeholder);
     
     if (alCambiar) {
         const actualizarValor = () => alCambiar(input.val());
@@ -23,16 +25,17 @@ function Input({titulo, valor, tipo = 'text', alCambiar}) {
     return campo;
 }
 
-function Texto({titulo, valor, alCambiar}) {
-    return Input({titulo, valor, alCambiar});
+function Texto({titulo, valor, alCambiar, placeholder}) {
+    return Input({titulo, valor, alCambiar, placeholder});
 }
 
-function Numero({titulo, valor, alCambiar}) {
-    return Input({titulo, valor, alCambiar, tipo:'number'});
+function Numero({titulo, valor, alCambiar, placeholder}) {
+    return Input({titulo, valor, alCambiar, tipo:'number', placeholder});
 }
 
 function Switch({titulo, valor, alCambiar}) {
     const contenedor = Campo({titulo});
+    campo.addClass('campo-switch');
 
     const input = $(`<input type="checkbox" />`);
     if (valor) input.val(valor);
@@ -50,6 +53,7 @@ function Switch({titulo, valor, alCambiar}) {
 
 function Seleccion({titulo, valor, alCambiar, opciones}) {
     const contenedor = Campo({titulo});
+    campo.addClass('campo-opciones');
     
     const select = $(`<select class="opciones"></select>`);
     if (alCambiar) select.change(() => alCambiar(select.val()));

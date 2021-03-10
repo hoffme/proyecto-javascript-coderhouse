@@ -1,21 +1,44 @@
-class PaginaProductos extends Pagina {
-    constructor() { super('Productos') }
+class PaginaProductos extends Crud {
+    constructor(repositorio) { super('Productos', repositorio) }
 
-    _contenido() {
-        const ctn = $('<div><div>');
+    filtroBusqueda(filtro, obj) {
+        return obj.nombre.toLowerCase().includes(filtro.query.toLowerCase());
+    }
 
-        ctn.append(Texto({ titulo: 'Un Texto', alCambiar: console.log }));
-        ctn.append(Numero({ titulo: 'Un Numero', alCambiar: console.log }));
-        ctn.append(Switch({ titulo: 'Un Switch', alCambiar: console.log }));
-        ctn.append(Seleccion({ titulo: 'Un Selector', alCambiar: console.log, opciones:[
-            { titulo: 'opcion 1', valor: 0 },
-            { titulo: 'opcion 2', valor: 1 },
-            { titulo: 'opcion 3', valor: 2 },
-            { titulo: 'opcion 4', valor: 3 },
-        ] }));
-        ctn.append(BotonPrincipal({titulo: 'Haceme Click', alClick: () => console.log('hola')}))
-        ctn.append(Boton({titulo: 'No Haceme Click', alClick: () => console.log('chau')}))
+    fila(obj) {
+        const ctn = $(`<div class="listado-fila-producto"></div>`);
+
+        ctn.append(`<label class="nombre">${obj.nombre}</label>`);
+
+        const editar = $('<button>Editar</button>');
+        editar.click(() => this.editar(obj));
+        ctn.append(editar);
 
         return ctn;
+    }
+
+    cabeceraBusqueda(contenedor) {
+        contenedor.append(
+            Texto({
+                placeholder: 'Buscar por nombre',
+                alCambiar: texto => this.buscar({ query: texto })
+            }),
+            BotonPrincipal({
+                titulo: 'Crear Producto',
+                alClick: () => this.crear()
+            })
+        );
+    }
+
+    formularioCreacion(datos) {
+        return [
+            Texto({ titulo: 'Nombre', alCambiar: t => datos.nombre = t })
+        ]
+    }
+
+    formularioEdicion(datos) {
+        return [
+            Texto({ titulo: 'Nombre', alCambiar: t => datos.nombre = t })
+        ]
     }
 }

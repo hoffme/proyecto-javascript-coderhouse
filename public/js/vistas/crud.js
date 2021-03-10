@@ -1,85 +1,87 @@
-class CRUDVista {
-    constructor(repositorio, camposFiltro, camposBusqueda, camposObjeto) {
+class Crud extends Pagina {
+    constructor(nombre, repositorio) {
+        super(nombre);
         this.repositorio = repositorio;
-        this.camposFiltro = camposFiltro;
-        this.camposBusqueda = camposBusqueda;
-        this.camposObjeto = camposObjeto;
-
-        this.buscador = new Buscador(
-            repositorio,
-            (...p) => this.filtroBuscador(...p),
-            (...p) => this.vistaItemBuscador(...p)
-        );
-
-        this.editor = null;
-        this.contenedor = $('<div class="crud-vista"></div>')
-        this.contenedor.append(
-            this.botonCrear(),
-            this.buscador.render()
-        );
+        this.listado = $(`<div class="listado"><div>`);
     }
 
-    filtroBuscador(query, obj) {
-        for (const campo of this.camposFiltro) {
-            if (campo in obj && obj[campo].toLowerCase().includes(query.toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // metodos abstractos
 
-    cerrarEditor() {
-        const editor = this.editor;
+    filtroBusqueda(filtro, dato) { return false }
 
-        if (!editor || this.contenedor.children().length <= 2) return;
-        editor.animate({ width: 0 }, "fast", () => editor.remove());
-    }
+    fila(fila) { return null }
+
+    cabeceraBusqueda(contenedor) { }
+
+    formularioCreacion(datos) { return null }
+
+    formularioEdicion(datos) { return null }
+
+    // metodos concretos
+
+    eliminar(obj) { this.repositorio.remover(obj) }
 
     editar(obj = {}) {
-        this.cerrarEditor();
+        const ctn = $(`<div class="formulario">
+            <h2>Editar</h2>
+        </div>`);
 
-        const campos = [...this.camposObjeto];
-        campos.forEach(campo => campo.valor = obj[campo.nombre]);
+        ctn.append(this.formularioEdicion(obj));
 
-        const editor = new Editor('Editar', campos)
-        editor.alGuardar = datos => {
-            this.repositorio.crear(datos, true);
-            this.cerrarEditor();
-            this.buscador.actualizarListado("");
+        ctn.append(BotonPrincipal({ titulo: 'Guardar', alClick: () => {
+            this.repositorio.actualizar(obj);
+            this.cerrarSlide();
+        } }));
+        
+        ctn.append(Boton({ titulo: 'Cancelar', alClick: () => this.cerrarSlide() }));
+
+        this.abrirSlide(ctn);
+    }
+
+    crear() {
+        const obj = {};
+
+        const ctn = $(`<div class="formulario">
+            <h2>Crear</h2>
+        </div>`);
+
+        ctn.append(this.formularioCreacion(obj));
+
+        ctn.append(BotonPrincipal({ titulo: 'Crear', alClick: () => {
+            this.repositorio.crear(obj);
+            this.cerrarSlide();
+        } }));
+        
+        ctn.append(Boton({ titulo: 'Cancelar', alClick: () => this.cerrarSlide() }));
+
+        this.abrirSlide(ctn);
+    }
+
+    buscar(filtro) {
+        this.listado.empty();
+        
+        const resultados = this.repositorio.obtener(filtro, this.filtroBusqueda);
+        resultados.forEach(fila => {
+            const vista = this.fila(fila);
+            if (!vista) return;
+
+            vista.addClass('listado-fila');
+            this.listado.append(vista);
+        })
+        
+        if (this.listado.is(':empty')) {
+            this.listado.text('No se han encontrado resultados');
         }
-        editor.alCancelar = () => this.cerrarEditor();
-        editor.alBorrar = datos => {
-            this.repositorio.remover(datos);
-            this.cerrarEditor();
-            this.buscador.actualizarListado("");
-        }
-
-        this.editor = editor.render();
-        this.contenedor.append(this.editor);
-        this.editor.animate({ width: '100%' }, "fast");
     }
 
-    vistaItemBuscador(ctn, obj) {
-        this.camposBusqueda.forEach(campo => ctn.append(`<label>${obj[campo]}</label>`));
+    _contenido() {
+        const ctn = $('<div class="ancho" id="pagina-productos"></div>');
 
-        const editar = $('<button>Editar</button>');
-        editar.click(() => this.editar(obj));
+        const cabecera = $('<div class="cabecera"><div>');
+        this.cabeceraBusqueda(cabecera);
 
-        const eliminar = $('<button>Eliminar</button>')
-        eliminar.click(() => {
-            this.repositorio.remover(obj);
-            this.cerrarEditor();
-            this.buscador.actualizarListado("");
-        });
-
-        ctn.append(editar, eliminar);
+        ctn.append(cabecera, this.listado);
+        
+        return ctn;
     }
-
-    botonCrear() {
-        const button = $('<button class="boton-nuevo">Nuevo</button>')
-        button.click(() => this.editar());
-        return button;
-    }
-
-    render() { return this.contenedor }
 }

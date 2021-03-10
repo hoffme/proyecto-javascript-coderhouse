@@ -23,3 +23,44 @@
     box-shadow: 1px 1px 5px black;
     background-color: var(--superficie-1);
 }
+
+.pagina .ancho {
+    width: calc(100% - 20px);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+@media (min-width: 820px) {
+    .pagina .ancho {
+        width: 800px;
+        padding-left: calc(50% - 400px);
+        padding-right: calc(50% - 400px);
+    }
+}
+
+.pagina #pagina-productos {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.pagina #pagina-productos .cabecera {
+    display: flex;
+    flex-direction: row;
+}
+.pagina #pagina-productos .cabecera .campo { flex: 1 }
+.pagina #pagina-productos .listado {
+    flex: 1;
+    margin: 0.5rem;
+    background-color: var(--superficie-1);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    box-shadow: 1px 1px 3px var(--sombra-superficie-1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.formulario {
+    padding: 1rem;
+}
+.formulario h2 { color: var(--sobre-superficie-1); }
