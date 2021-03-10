@@ -7,22 +7,38 @@ const REPOSITORIOS = {
 }
 
 class App {
-    iniciar(id) {
-        const PAGINAS = [
+    constructor(idRaiz) {
+        this.raiz = $(`#${idRaiz}`);
+
+        this.paginas = [
             new PaginaRecetas(),
             new PaginaProductos(),
             new PaginaHerramientas(),
             new PaginaEmpleados(),
             new PaginaCostosFijos()
         ]
-    
-        const paginas = $('<main></main>');
 
-        const nav = new Navegacion(paginas);
-        PAGINAS.forEach(pagina => nav.agregar(pagina));
-        nav.seleccionar(PAGINAS[0].nombre);
-    
-        const ctn = $(`#${id}`);
-        ctn.prepend(nav.render(), paginas);
+        this.navegacion = new Navegacion(this.paginas.map((pagina, indice) => {
+            return {
+                titulo: pagina.nombre,
+                alSeleccionar: () => this.abrir(indice),
+                alDeseleccionar: () => this.cerrar(indice)
+            }
+        }));
+        this.raiz.prepend(this.navegacion.render());
+
+        this.navegacion.seleccionar(0);
+    }
+
+    abrir(indicePagina) {
+        if (indicePagina < 0 || indicePagina >= this.paginas.length) return;
+
+        this.raiz.append(this.paginas[indicePagina].render());
+    }
+
+    cerrar(indicePagina) {
+        if (indicePagina < 0 || indicePagina >= this.paginas.length) return;
+
+        this.paginas[indicePagina].ctn.remove();
     }
 }

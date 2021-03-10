@@ -1,29 +1,29 @@
 class Navegacion {
-    constructor(raizPaginas) {
+    constructor(secciones) {
         this.nav = $('<nav class="navegacion"></nav>');
+        this.seleccionado = -1;
 
-        this.paginas = {};
-        this.raizPaginas = raizPaginas;
-    }
+        this.secciones = secciones.map((seccion, indice) => {
+            const boton = $(`<button>${seccion.titulo}</button>`);
+            boton.click(() => this.seleccionar(indice));
 
-    agregar(pagina) {
-        const boton = $(`<button>${pagina.nombre.toUpperCase()}</button>`);
-        boton.click(() => this.seleccionar(pagina.nombre));
-    
-        this.nav.append(boton);
-        this.paginas[pagina.nombre] = {pagina, boton};
-    }
-
-    seleccionar(nombre) {
-        if (!nombre in this.paginas) return;
-
-        Object.values(this.paginas).forEach(pagina => {
-            pagina.boton.removeClass('seleccionado')
+            this.nav.append(boton);
+        
+           return {...seccion, boton}; 
         });
-        this.paginas[nombre].boton.addClass('seleccionado');
+    }
 
-        this.raizPaginas.empty();
-        this.raizPaginas.append(this.paginas[nombre].pagina.render());
+    seleccionar(indice) {
+        if (indice < 0 || indice >= this.secciones.length) return;
+
+        if (this.seleccionado >= 0 && this.seleccionado < this.secciones.length) {
+            this.secciones[this.seleccionado].boton.removeClass('seleccionado');
+            this.secciones[this.seleccionado].alDeseleccionar();
+        }
+
+        this.seleccionado = indice;
+        this.secciones[this.seleccionado].boton.addClass('seleccionado');
+        this.secciones[this.seleccionado].alSeleccionar();
     }
 
     render() { return this.nav }

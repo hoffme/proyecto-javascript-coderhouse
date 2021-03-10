@@ -1,5 +1,1 @@
-$(() => {
-    const app = new App();
-
-    app.iniciar('raiz');
-});
+$(() => new App('raiz'));
