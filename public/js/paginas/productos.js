@@ -2,25 +2,13 @@ class PaginaProductos extends Pagina {
     constructor() { super('Productos') }
 
     _contenido() {
-        const crud = new CRUDVista(
-            REPOSITORIOS.productos,
-            [ 'nombre'],
-            [ 'id', 'nombre', 'precio' ],
-            [
-                { titulo: 'ID', nombre: 'id', tipo: 'numero'},
-                { titulo: 'Nombre', nombre: 'nombre', tipo: 'texto'},
-                { titulo: 'Codigo', nombre: 'codigo', tipo: 'texto'},
-                { titulo: 'Precio', nombre: 'precio', tipo: 'numero'},
-                { titulo: 'Unidad de medida', nombre: 'unidad', tipo: 'opciones', opciones:
-                    [
-                        { nombre: 'Unidad', valor: 'uni' },
-                        { nombre: 'Volumen', valor: 'vol' },
-                        { nombre: 'Masa', valor: 'masa' },
-                    ]
-                }
-            ]
-        );
+        const ctn = $('<div><div>');
 
-        return crud.render();
+        ctn.append(Texto({ titulo: 'Un Texto' }));
+        ctn.append(Numero({ titulo: 'Un Numero' }));
+        ctn.append(Switch({ titulo: 'Un Switch' }));
+        ctn.append(Seleccion({ titulo: 'Un Selector' }));
+
+        return ctn;
     }
 }
