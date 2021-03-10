@@ -1,9 +1,9 @@
 const PAGINAS = [
-    PAGINA_RECETAS,
-    PAGINA_PRODUCTOS,
-    PAGINA_HERRAMIENTAS,
-    PAGINA_EMPLEADOS,
-    PAGINA_COSTOS_FIJOS
+    new PaginaRecetas(),
+    new PaginaProductos(),
+    new PaginaHerramientas(),
+    new PaginaEmpleados(),
+    new PaginaCostosFijos()
 ]
 
 $(() => {

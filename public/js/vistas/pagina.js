@@ -1,10 +1,17 @@
 class Pagina {
     constructor(nombre) {
         this.nombre = nombre;
-        this.contenedor = $('<div class="pagina"></div>');
     }
 
-    contenido(renderizador) { renderizador(this.contenedor); }
+    _contenido() { }
 
-    render() { return this.contenedor }
+    render() {
+        const ctn = $(`<div class="pagina">
+            <h1>${this.nombre}</h1>
+        </div>`);
+
+        ctn.append(this._contenido());
+
+        return ctn;
+    }
 }

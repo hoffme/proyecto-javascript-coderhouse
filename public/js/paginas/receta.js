@@ -1,4 +1,7 @@
-const PAGINA_RECETAS = new Pagina('Recetas');
-PAGINA_RECETAS.contenido(contenedor => {
+class PaginaRecetas extends Pagina {
+    constructor() { super('Recetas') }
 
-});
+    _contenido() {
+        
+    }
+}

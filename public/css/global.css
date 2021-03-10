@@ -32,5 +32,11 @@ main .pagina {
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+}
+
+main .pagina h1 {
+    color: white;
+    margin: 1rem;
+    padding: 0;
 }
