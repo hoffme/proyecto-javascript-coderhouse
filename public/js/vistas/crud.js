@@ -3,6 +3,8 @@ class Crud extends Pagina {
         super(nombre);
         this.repositorio = repositorio;
         this.listado = $(`<div class="listado"><div>`);
+
+        this.buscar({});
     }
 
     // metodos abstractos
@@ -31,6 +33,11 @@ class Crud extends Pagina {
         ctn.append(BotonPrincipal({ titulo: 'Guardar', alClick: () => {
             this.repositorio.actualizar(obj);
             this.cerrarSlide();
+        } }));
+        
+        ctn.append(Boton({ titulo: 'Eliminar', alClick: () => {
+            this.repositorio.remover(obj);
+            this.cerrarSlide()
         } }));
         
         ctn.append(Boton({ titulo: 'Cancelar', alClick: () => this.cerrarSlide() }));
@@ -75,7 +82,7 @@ class Crud extends Pagina {
     }
 
     _contenido() {
-        const ctn = $('<div class="ancho" id="pagina-productos"></div>');
+        const ctn = $('<div class="ancho pagina-crud"></div>');
 
         const cabecera = $('<div class="cabecera"><div>');
         this.cabeceraBusqueda(cabecera);

@@ -6,6 +6,12 @@ class Repositorio {
         this.descargarDatos();
     }
 
+    nuevoId(obj) {
+        const id = uuid.v4();
+        while (id in this._datos) id = uuid.v4();
+        obj.id = id;
+    }
+
     descargarDatos() {
         this._datos = JSON.parse(localStorage.getItem(this.ruta));
         if (!this._datos) this._datos = {};
@@ -19,21 +25,18 @@ class Repositorio {
         return Object.values(this._datos).filter(obj => filtrado(valor, obj));
     }
 
-    crear(obj, actualizar = false) {
-        if (!actualizar && this._datos[obj.id]) {
-            throw new Error("Existe un objeto con el id: '" + obj.id + "'");
-        }
-
-        this._datos[obj.id] = obj;
+    crear(obj) {
+        this.nuevoId(obj);
+        this._datos[obj.id] = {...obj};
         this.cargarDatos();
     }
 
-    actualizar(obj, crear = false) {
-        if (!crear && !this._datos[obj.id]) {
+    actualizar(obj) {
+        if (!obj.id in this._datos) {
             throw new Error("No existe un objeto con el id: '" + obj.id + "'");
         }
 
-        this._datos[obj.id] = obj;
+        this._datos[obj.id] = {...obj};
         this.cargarDatos();
     }
 

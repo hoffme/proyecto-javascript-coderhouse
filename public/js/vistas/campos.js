@@ -4,13 +4,14 @@ function Campo({titulo}) {
     return contenedor;
 }
 
-function Input({titulo, valor, tipo = 'text', alCambiar, placeholder}) {
+function Input({titulo, valor, tipo = 'text', alCambiar, placeholder, disabled}) {
     const campo = Campo({titulo});
     campo.addClass('campo-input');
 
     const input = $(`<input type="${tipo}" />`);
-    if (valor) input.val(campo.valor);
+    if (valor) input.val(valor);
     if (placeholder) input.attr("placeholder", placeholder);
+    if (disabled) input.prop('disabled', disabled);
     
     if (alCambiar) {
         const actualizarValor = () => alCambiar(input.val());
@@ -25,21 +26,22 @@ function Input({titulo, valor, tipo = 'text', alCambiar, placeholder}) {
     return campo;
 }
 
-function Texto({titulo, valor, alCambiar, placeholder}) {
-    return Input({titulo, valor, alCambiar, placeholder});
+function Texto({titulo, valor, alCambiar, placeholder, disabled}) {
+    return Input({titulo, valor, alCambiar, placeholder, disabled});
 }
 
-function Numero({titulo, valor, alCambiar, placeholder}) {
-    return Input({titulo, valor, alCambiar, tipo:'number', placeholder});
+function Numero({titulo, valor, alCambiar, placeholder, disabled}) {
+    return Input({titulo, valor, alCambiar, tipo:'number', placeholder, disabled});
 }
 
-function Switch({titulo, valor, alCambiar}) {
+function Switch({titulo, valor, alCambiar, disabled}) {
     const contenedor = Campo({titulo});
     campo.addClass('campo-switch');
 
     const input = $(`<input type="checkbox" />`);
     if (valor) input.val(valor);
     if (alCambiar) input.change(() => alCambiar(input.prop("checked")));
+    if (disabled) input.prop('disabled', disabled);
 
     const switchCtn = $(`<label class="switch">
         <span class="switch-slider"></span>
@@ -51,12 +53,13 @@ function Switch({titulo, valor, alCambiar}) {
     return contenedor;
 }
 
-function Seleccion({titulo, valor, alCambiar, opciones}) {
+function Seleccion({titulo, valor, alCambiar, opciones, disabled}) {
     const contenedor = Campo({titulo});
-    campo.addClass('campo-opciones');
+    contenedor.addClass('campo-opciones');
     
     const select = $(`<select class="opciones"></select>`);
     if (alCambiar) select.change(() => alCambiar(select.val()));
+    if (disabled) input.prop('disabled', disabled);
 
     select.prepend('<option disabled selected>Opciones</option>');
 
@@ -74,21 +77,23 @@ function Seleccion({titulo, valor, alCambiar, opciones}) {
         });
     }
 
-    if (valor) select.val(campo.valor);
+    if (valor) select.val(valor);
 
     contenedor.append(select);
 
     return contenedor;
 }
 
-function Boton({titulo, alClick}) {
-    const boton = $(`<div class="boton">${titulo}</div>`);
+function Boton({titulo, alClick, disabled}) {
+    const boton = $(`<button class="boton">${titulo}</button>`);
     if (alClick) boton.click(() => alClick());
+    if (disabled) input.prop('disabled', disabled);
     return boton;
 }
 
-function BotonPrincipal({titulo, alClick}) {
+function BotonPrincipal({titulo, alClick, disabled}) {
     const boton = Boton({titulo, alClick});
     boton.addClass('boton-principal');
+    if (disabled) input.prop('disabled', disabled);
     return boton;
 }
