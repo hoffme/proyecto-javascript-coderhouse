@@ -13,13 +13,7 @@ function Input({titulo, valor, tipo = 'text', alCambiar, placeholder, disabled})
     if (placeholder) input.attr("placeholder", placeholder);
     if (disabled) input.prop('disabled', disabled);
     
-    if (alCambiar) {
-        const actualizarValor = () => alCambiar(input.val());
-
-        input.change(actualizarValor);
-        input.keydown(actualizarValor);
-        input.keypress(actualizarValor);
-    }
+    if (alCambiar) input.on("input", () => alCambiar(input.val()));
 
     campo.append(input);
 

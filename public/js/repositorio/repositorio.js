@@ -21,8 +21,8 @@ class Repositorio {
         localStorage.setItem(this.ruta, JSON.stringify(this._datos));
     }
 
-    obtener(valor, filtrado) {
-        return Object.values(this._datos).filter(obj => filtrado(valor, obj));
+    obtener(filtro, filtrador) {
+        return Object.values(this._datos).filter(obj => filtrador(filtro, obj));
     }
 
     crear(obj) {

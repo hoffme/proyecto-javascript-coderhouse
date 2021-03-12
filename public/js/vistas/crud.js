@@ -11,6 +11,8 @@ class Crud extends Pagina {
 
     filtroBusqueda(filtro, dato) { return false }
 
+    filaCabecera() { return null }
+
     fila(fila) { return null }
 
     cabeceraBusqueda(contenedor) { }
@@ -33,14 +35,19 @@ class Crud extends Pagina {
         ctn.append(BotonPrincipal({ titulo: 'Guardar', alClick: () => {
             this.repositorio.actualizar(obj);
             this.cerrarSlide();
+            this.buscar({});
         } }));
         
         ctn.append(Boton({ titulo: 'Eliminar', alClick: () => {
             this.repositorio.remover(obj);
             this.cerrarSlide()
+            this.buscar({});
         } }));
         
-        ctn.append(Boton({ titulo: 'Cancelar', alClick: () => this.cerrarSlide() }));
+        ctn.append(Boton({ titulo: 'Cancelar', alClick: () => {
+            this.cerrarSlide();            
+            this.buscar({});
+        } }));
 
         this.abrirSlide(ctn);
     }
@@ -57,9 +64,13 @@ class Crud extends Pagina {
         ctn.append(BotonPrincipal({ titulo: 'Crear', alClick: () => {
             this.repositorio.crear(obj);
             this.cerrarSlide();
+            this.buscar({});
         } }));
         
-        ctn.append(Boton({ titulo: 'Cancelar', alClick: () => this.cerrarSlide() }));
+        ctn.append(Boton({ titulo: 'Cancelar', alClick: () => {
+            this.cerrarSlide();
+            this.buscar({});
+        } }));
 
         this.abrirSlide(ctn);
     }
@@ -68,6 +79,19 @@ class Crud extends Pagina {
         this.listado.empty();
         
         const resultados = this.repositorio.obtener(filtro, this.filtroBusqueda);
+
+        if (resultados && resultados.length > 0) {
+            const cabecera = this.filaCabecera();
+            if (cabecera) {
+                cabecera.addClass('listado-cabecera');
+                this.listado.append(cabecera);
+            }
+        } else {
+            this.listado.append(`<label class="mensaje">
+                No se han encontrado resultados
+            </label>`);
+        }
+
         resultados.forEach(fila => {
             const vista = this.fila(fila);
             if (!vista) return;
@@ -75,10 +99,6 @@ class Crud extends Pagina {
             vista.addClass('listado-fila');
             this.listado.append(vista);
         })
-        
-        if (this.listado.is(':empty')) {
-            this.listado.text('No se han encontrado resultados');
-        }
     }
 
     _contenido() {

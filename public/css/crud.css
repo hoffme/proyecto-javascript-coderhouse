@@ -1,0 +1,54 @@
+.pagina .pagina-crud {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.pagina .pagina-crud .cabecera {
+    display: flex;
+    flex-direction: row;
+}
+.pagina .pagina-crud .cabecera .campo { flex: 1 }
+.pagina .pagina-crud .cabecera .boton { width: auto; }
+.pagina .pagina-crud .listado {
+    flex: 1;
+    margin: 0.5rem;
+    background-color: var(--superficie-1);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    box-shadow: 1px 1px 3px var(--sombra-superficie-1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.pagina .pagina-crud .listado .mensaje {
+    color: #666;
+    text-align: center;
+}
+.pagina .pagina-crud .listado .listado-fila, .pagina .pagina-crud .listado .listado-cabecera {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #333;
+    font-size: 0.9em;
+}
+.pagina .pagina-crud .listado .listado-fila > *, .pagina .pagina-crud .listado .listado-cabecera > * {
+    flex: 1;
+}
+.pagina .pagina-crud .listado .listado-cabecera {
+    font-weight: bold;
+    color: #aaa;
+    text-align: center;
+    border-bottom: 1px solid #666;
+}
+.pagina .pagina-crud .listado .listado-fila {
+    color: white;
+}
+.pagina .pagina-crud .listado button {
+    background-color: transparent;
+    border: 1px solid #333;
+    padding: 0.25rem;
+    color: white;
+    border-radius: 5px;
+}

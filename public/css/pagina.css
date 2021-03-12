@@ -37,32 +37,3 @@
         padding-right: calc(50% - 400px);
     }
 }
-
-.pagina .pagina-crud {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-.pagina .pagina-crud .cabecera {
-    display: flex;
-    flex-direction: row;
-}
-.pagina .pagina-crud .cabecera .campo { flex: 1 }
-.pagina .pagina-crud .cabecera .boton { width: auto; }
-.pagina .pagina-crud .listado {
-    flex: 1;
-    margin: 0.5rem;
-    background-color: var(--superficie-1);
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    box-shadow: 1px 1px 3px var(--sombra-superficie-1);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.formulario {
-    padding: 1rem;
-}
-.formulario h2 { color: var(--sobre-superficie-1); }
-.formulario .campo { background-color: var(--superficie-2) }
