@@ -1,7 +1,6 @@
 class PaginaEmpleados extends Crud {
     constructor() { super('Empleados', contexto.repositorios.empleados) }
 
-    
     filtroBusqueda(filtro, obj) {
         if (
             Object.keys(filtro).length === 0 ||
@@ -29,7 +28,7 @@ class PaginaEmpleados extends Crud {
         const ctn = $(`<div class="listado-fila">
             <label class="nombre">${obj.nombre}</label>
             <label class="cargo">${obj.cargo}</label>
-            <label class="horas">${obj['horas-semanales']}</label>
+            <label class="horas">${obj.horas_semanales}</label>
             <label class="salario">$ ${obj.salario}</label>
         </div>`);
 
@@ -60,7 +59,7 @@ class PaginaEmpleados extends Crud {
     formulario(datos) {
         return [
             Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }),
-            Numero({ titulo: 'Horas Semanales', valor: datos['horas-semanales'], alCambiar: t => datos['horas-semanales'] = t }),
+            Numero({ titulo: 'Horas Semanales', valor: datos.horas_semanales, alCambiar: t => datos.horas_semanales = t }),
             Numero({ titulo: 'Salario Mensual', valor: datos.salario, alCambiar: t => datos.salario = t }),
             Seleccion({ titulo: 'Cargo', valor: datos.cargo, alCambiar: t => datos.cargo = t, opciones: [
                 { titulo: 'Vendedor', valor: 'vendedor' },
