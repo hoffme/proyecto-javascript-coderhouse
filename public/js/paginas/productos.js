@@ -6,10 +6,13 @@ class PaginaProductos extends Crud {
             Object.keys(filtro).length === 0 ||
             filtro.query === ''
         ) return true;
-
-        if (!obj.nombre || !filtro.query) return false;
         
-        return obj.nombre.toLowerCase().includes(filtro.query.toLowerCase());
+        if (filtro.query) {
+            if (obj.nombre && obj.nombre.toLowerCase().includes(filtro.query.toLowerCase())) return true;
+            if (obj.codigo && obj.codigo.toLowerCase().includes(filtro.query.toLowerCase())) return true;
+        }
+
+        return false;
     }
 
     filaCabecera() {
@@ -42,7 +45,7 @@ class PaginaProductos extends Crud {
     cabeceraBusqueda(contenedor) {
         contenedor.append(
             Texto({
-                placeholder: 'Buscar por nombre',
+                placeholder: 'Buscar ...',
                 alCambiar: texto => this.buscar({ query: texto })
             }),
             BotonPrincipal({
@@ -52,21 +55,11 @@ class PaginaProductos extends Crud {
         );
     }
 
-    formularioCreacion(datos) {
-        return [
-            Texto({ titulo: 'Codigo', alCambiar: t => datos.codigo = t }),
-            Texto({ titulo: 'Nombre', alCambiar: t => datos.nombre = t }),
-            Numero({ titulo: 'Precio', alCambiar: t => datos.precio = t }),
-            Seleccion({ titulo: 'Unidad de Medida', alCambiar: t => datos.unidad = t, opciones: [
-                { titulo: 'Masa (gramos)', valor: 'masa' },
-                { titulo: 'Volumen (mililitros)', valor: 'volumen' },
-                { titulo: 'Unitario', valor: 'unitario' },
-            ]}),
-            Numero({ titulo: 'Cantidad', alCambiar: t => datos.cantidad = t })
-        ]
-    }
+    formularioCreacion(datos) { return this.formulario(datos) }
 
-    formularioEdicion(datos) {
+    formularioEdicion(datos) { return this.formulario(datos) }
+
+    formulario(datos) {
         return [
             Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }),
             Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }),
