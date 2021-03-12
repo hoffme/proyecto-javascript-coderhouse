@@ -7,6 +7,7 @@ class Pagina {
     }
 
     abrirSlide(contenido) {
+        this.cerrarSlide();
         this.slide.append(contenido);
         this.slide.animate({ width: '100%' }, "fast");
     }
