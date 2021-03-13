@@ -13,12 +13,34 @@ class Repositorio {
     }
 
     descargarDatos() {
-        this._datos = JSON.parse(localStorage.getItem(this.ruta));
-        if (!this._datos) this._datos = {};
+        // this._datos = JSON.parse(localStorage.getItem(this.ruta));
+
+        $.ajax({
+            method: "GET",
+            url:    `/api/repo/${this.ruta}`,
+            success: (res) => {
+                console.log(res)
+
+                if (res.error) {
+                    this._datos = {};
+                    return;
+                }
+
+                this._datos = res.datos;
+            }
+        });
     }
 
     cargarDatos() {
-        localStorage.setItem(this.ruta, JSON.stringify(this._datos));
+        // localStorage.setItem(this.ruta, JSON.stringify(this._datos));
+
+        $.ajax({
+            method: "POST",
+            contentType: 'application/json',
+            url:    `/api/repo/${this.ruta}`,
+            data:   JSON.stringify(this._datos),
+            success: (res) => { console.log(res) }
+        });
     }
 
     obtener(filtro, filtrador) {
