@@ -1,5 +1,5 @@
 class PaginaCostosFijos extends Crud {
-    constructor() { super('Costos Fijos', contexto.repositorios.costos_fijos) }
+    constructor() { super('Costos Fijos', contexto.repositorios.costos) }
 
     filtroBusqueda(filtro, obj) {
         if (

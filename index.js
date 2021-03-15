@@ -4,7 +4,13 @@ const repositorio = require('./src/repositorio');
 const app = express();
 const port = 3000;
 
-const repoitorios = {};
+const repoitorios = {
+    costos: new repositorio.Repositorio('costos'),
+    empleados: new repositorio.Repositorio('empleados'),
+    herramientas: new repositorio.Repositorio('herramientas'),
+    productos: new repositorio.Repositorio('productos'),
+    recetas: new repositorio.Repositorio('recetas')
+};
 
 app.use(express.json());
 
@@ -12,10 +18,12 @@ app.get('/api/repo/:nombre', async (req, res) => {
     const nombre = req.params.nombre;
     const filtro = req.query;
 
-    const repo = repoitorios[nombre];
-    if (!repo) repoitorios[nombre] = new repositorio.Repositorio();
+    const repositorio = repoitorios[nombre];
+    if (!repositorio) {
+        res.send({error: `el repositorio ${nombre} no existe`});
+    }
 
-    const datos = await repoitorios[nombre].obtener(
+    const datos = await repositorio.obtener(
         (Object.keys(filtro).length > 0) ? filtro : { todos: true }
     );
 
@@ -27,7 +35,7 @@ app.post('/api/repo/:nombre', express.json(), async (req, res) => {
     const campos = req.body;
 
     const repositorio = repoitorios[nombre];
-    if (!repoitorios) {
+    if (!repositorio) {
         res.send({error: `el repositorio ${nombre} no existe`});
     }
 
@@ -42,12 +50,12 @@ app.put('/api/repo/:nombre/:id', express.json(), async (req, res) => {
     const campos = req.body;
 
     const repositorio = repoitorios[nombre];
-    if (!repoitorios) {
+    if (!repositorio) {
         res.send({error: `el repositorio ${nombre} no existe`});
     }
 
     const datos = await repositorio.actualizar(id, campos);
-    
+
     res.send({ datos });
 })
 
@@ -56,7 +64,7 @@ app.delete('/api/repo/:nombre/:id', async (req, res) => {
     const id = req.params.id;
 
     const repositorio = repoitorios[nombre];
-    if (!repoitorios) {
+    if (!repositorio) {
         res.send({error: `el repositorio ${nombre} no existe`});
     }
 

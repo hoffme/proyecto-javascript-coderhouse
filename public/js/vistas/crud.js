@@ -4,7 +4,7 @@ class Crud extends Pagina {
         this.repositorio = repositorio;
         this.listado = $(`<div class="listado"><div>`);
 
-        this.buscar({});
+        this.buscar();
     }
 
     // metodos abstractos
@@ -23,7 +23,7 @@ class Crud extends Pagina {
 
     // metodos concretos
 
-    eliminar(obj) { this.repositorio.remover(obj) }
+    eliminar(id) { return this.repositorio.remover(id) }
 
     editar(obj = {}) {
         const ctn = $(`<div class="formulario">
@@ -32,14 +32,16 @@ class Crud extends Pagina {
 
         ctn.append(this.formularioEdicion(obj));
 
-        ctn.append(BotonPrincipal({ titulo: 'Guardar', alClick: () => {
-            this.repositorio.actualizar(obj);
+        ctn.append(BotonPrincipal({ titulo: 'Guardar', alClick: async () => {
+            await this.repositorio.actualizar(obj);
+
             this.cerrarSlide();
             this.buscar({});
         } }));
         
-        ctn.append(Boton({ titulo: 'Eliminar', alClick: () => {
-            this.repositorio.remover(obj);
+        ctn.append(Boton({ titulo: 'Eliminar', alClick: async () => {
+            await this.repositorio.remover(obj.id);
+
             this.cerrarSlide()
             this.buscar({});
         } }));
@@ -61,8 +63,9 @@ class Crud extends Pagina {
 
         ctn.append(this.formularioCreacion(obj));
 
-        ctn.append(BotonPrincipal({ titulo: 'Crear', alClick: () => {
-            this.repositorio.crear(obj);
+        ctn.append(BotonPrincipal({ titulo: 'Crear', alClick: async () => {
+            await this.repositorio.crear(obj);
+
             this.cerrarSlide();
             this.buscar({});
         } }));
@@ -75,10 +78,10 @@ class Crud extends Pagina {
         this.abrirSlide(ctn);
     }
 
-    buscar(filtro) {
+    async buscar(filtro) {
         this.listado.empty();
         
-        const resultados = this.repositorio.obtener(filtro, this.filtroBusqueda);
+        const resultados = await this.repositorio.obtener(filtro);
 
         if (resultados && resultados.length > 0) {
             const cabecera = this.filaCabecera();

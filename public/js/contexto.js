@@ -1,6 +1,6 @@
 const contexto = {
     repositorios: {
-        costos_fijos: new Repositorio('costos-fijos'),
+        costos: new Repositorio('costos'),
         empleados: new Repositorio('empleados'),
         herramientas: new Repositorio('herramientas'),
         productos: new Repositorio('productos'),

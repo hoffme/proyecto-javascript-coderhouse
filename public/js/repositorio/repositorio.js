@@ -1,69 +1,65 @@
 class Repositorio {
-    constructor(ruta) {
-        this.ruta = ruta;
-        this._datos = {};
+    constructor(nombre) { this.nombre = nombre }
 
-        this.descargarDatos();
-    }
-
-    nuevoId(obj) {
-        const id = uuid.v4();
-        while (id in this._datos) id = uuid.v4();
-        obj.id = id;
-    }
-
-    descargarDatos() {
-        // this._datos = JSON.parse(localStorage.getItem(this.ruta));
-
-        $.ajax({
-            method: "GET",
-            url:    `/api/repo/${this.ruta}`,
-            success: (res) => {
-                console.log(res)
-
-                if (res.error) {
-                    this._datos = {};
-                    return;
-                }
-
-                this._datos = res.datos;
-            }
-        });
-    }
-
-    cargarDatos() {
-        // localStorage.setItem(this.ruta, JSON.stringify(this._datos));
-
-        $.ajax({
-            method: "POST",
-            contentType: 'application/json',
-            url:    `/api/repo/${this.ruta}`,
-            data:   JSON.stringify(this._datos),
-            success: (res) => { console.log(res) }
-        });
-    }
-
-    obtener(filtro, filtrador) {
-        return Object.values(this._datos).filter(obj => filtrador(filtro, obj));
+    obtener(filtro = {}) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: "GET",
+                contentType: 'application/json',
+                url:    `/api/repo/${this.nombre}?${$.param(filtro)}`,
+                success: (res) => {
+                    if (res.error) reject(res.error);
+                    resolve(res.datos);
+                },
+                error: reject
+            });
+        })
     }
 
     crear(obj) {
-        this.nuevoId(obj);
-        this._datos[obj.id] = {...obj};
-        this.cargarDatos();
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: "POST",
+                contentType: 'application/json',
+                url:    `/api/repo/${this.nombre}`,
+                data:   JSON.stringify(obj),
+                success: (res) => {
+                    if (res.error) reject(res.error);
+                    resolve(res.datos);
+                },
+                error: reject
+            });
+        })
     }
 
     actualizar(obj) {
-        if (!obj.id in this._datos) {
-            throw new Error("No existe un objeto con el id: '" + obj.id + "'");
-        }
-
-        this._datos[obj.id] = {...obj};
-        this.cargarDatos();
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: "PUT",
+                contentType: 'application/json',
+                url:    `/api/repo/${this.nombre}/${obj.id}`,
+                data:   JSON.stringify(obj),
+                success: (res) => {
+                    if (res.error) reject(res.error);
+                    resolve(res.datos);
+                },
+                error: reject
+            });
+        })
     }
 
-    remover(obj) {
-        delete this._datos[obj.id];
-        this.cargarDatos();
+    remover(id) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: "DELETE",
+                contentType: 'application/json',
+                url:    `/api/repo/${this.nombre}/${id}`,
+                success: (res) => {
+                    if (res.error) reject(res.error);
+                    resolve(res.datos);
+                },
+                error: reject
+            });
+        })
     }
 }
