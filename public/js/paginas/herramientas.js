@@ -1,20 +1,6 @@
 class PaginaHerramientas extends Crud {
     constructor() { super('Herramientas', contexto.repositorios.herramientas) }
 
-    filtroBusqueda(filtro, obj) {
-        if (
-            Object.keys(filtro).length === 0 ||
-            filtro.query === ''
-        ) return true;
-        
-        if (filtro.query) {
-            if (obj.nombre && obj.nombre.toLowerCase().includes(filtro.query.toLowerCase())) return true;
-            if (obj.codigo && obj.codigo.toLowerCase().includes(filtro.query.toLowerCase())) return true;
-        }
-
-        return false;
-    }
-
     filaCabecera() {
         return $(`<div>
             <label class="codigo">Codigo</label>
@@ -38,17 +24,29 @@ class PaginaHerramientas extends Crud {
         return ctn;
     }
 
-    cabeceraBusqueda(contenedor) {
-        contenedor.append(
+    cabeceraBusqueda() {
+        const cabecera = $('<div><div>');
+
+        cabecera.append(
             Texto({
                 placeholder: 'Buscar ...',
-                alCambiar: texto => this.buscar({ query: texto })
+                alCambiar: texto => {
+                    let filtro = {
+                        __contiene__: { nombre: texto, codigo: texto }
+                    };
+
+                    if (texto.length === 0) filtro = { todos: true }
+
+                    this.buscar(filtro)
+                }
             }),
             BotonPrincipal({
                 titulo: 'Crear Herramienta',
                 alClick: () => this.crear()
             })
         );
+
+        return cabecera;
     }
 
     formularioCreacion(datos) { return this.formulario(datos) }

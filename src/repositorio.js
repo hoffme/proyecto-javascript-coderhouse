@@ -16,6 +16,14 @@ class Repositorio {
             
             if (filtro.id && obj.id === filtro.id) return true;
             if (filtro.ids && filtro.ids.includes(obj.id)) return true;
+
+            if (filtro.__contiene__) {
+                for (const [campo, query] of Object.entries(filtro.__contiene__)) {
+                    try {
+                        if (obj[campo].toLowerCase().includes(query.toLowerCase())) return true;
+                    } catch {}
+                }
+            }
             
             return false;
         });

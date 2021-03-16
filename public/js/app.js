@@ -7,7 +7,7 @@ class App {
             new PaginaProductos(),
             new PaginaHerramientas(),
             new PaginaEmpleados(),
-            new PaginaCostosFijos()
+            new PaginaCostos()
         ]
 
         this.navegacion = new Navegacion(this.paginas.map((pagina, indice) => {
