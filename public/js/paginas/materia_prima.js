@@ -1,5 +1,5 @@
-class PaginaProductos extends Crud {
-    constructor() { super('Productos', contexto.repositorios.productos) }
+class PaginaMateriaPrima extends Crud {
+    constructor() { super('Materia Prima', contexto.repositorios.materia_prima) }
 
     filaCabecera() {
         return $(`<div>
@@ -43,7 +43,7 @@ class PaginaProductos extends Crud {
                 }
             }),
             BotonPrincipal({
-                titulo: 'Crear Producto',
+                titulo: 'Crear Materia Prima',
                 alClick: () => this.crear()
             })
         );

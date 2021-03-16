@@ -3,7 +3,7 @@ const contexto = {
         costos: new Repositorio('costos'),
         empleados: new Repositorio('empleados'),
         herramientas: new Repositorio('herramientas'),
-        productos: new Repositorio('productos'),
+        materia_prima: new Repositorio('materia_prima'),
         recetas: new Repositorio('recetas')
     }
 }

@@ -4,7 +4,7 @@ class App {
 
         this.paginas = [
             new PaginaRecetas(),
-            new PaginaProductos(),
+            new PaginaMateriaPrima(),
             new PaginaHerramientas(),
             new PaginaEmpleados(),
             new PaginaCostos()

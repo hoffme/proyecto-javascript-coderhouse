@@ -6,11 +6,11 @@ const port = 3000;
 const debug = true;
 
 const repoitorios = {
-    costos: new repositorio.Repositorio('costos'),
-    empleados: new repositorio.Repositorio('empleados'),
-    herramientas: new repositorio.Repositorio('herramientas'),
-    productos: new repositorio.Repositorio('productos'),
-    recetas: new repositorio.Repositorio('recetas')
+    costos: new repositorio.Repositorio(),
+    empleados: new repositorio.Repositorio(),
+    herramientas: new repositorio.Repositorio(),
+    materia_prima: new repositorio.Repositorio(),
+    recetas: new repositorio.Repositorio()
 };
 
 const log = (texto, salto = true) => {
