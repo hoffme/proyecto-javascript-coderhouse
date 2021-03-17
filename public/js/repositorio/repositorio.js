@@ -9,6 +9,11 @@ class Repositorio {
             $.ajax({
                 method: "GET",
                 contentType: 'application/json',
+                headers: {
+                    "accept": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                },
+                crossDomain: true,
                 url:    `${this.api_uri}/repo/${this.nombre}?${$.param(filtro)}`,
                 success: (res) => {
                     if (res.error) reject(res.error);
@@ -24,6 +29,11 @@ class Repositorio {
             $.ajax({
                 method: "POST",
                 contentType: 'application/json',
+                headers: {
+                    "accept": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                },
+                crossDomain: true,
                 url:    `${this.api_uri}/repo/${this.nombre}`,
                 data:   JSON.stringify(obj),
                 success: (res) => {
@@ -40,6 +50,11 @@ class Repositorio {
             $.ajax({
                 method: "PUT",
                 contentType: 'application/json',
+                headers: {
+                    "accept": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                },
+                crossDomain: true,
                 url:    `${this.api_uri}/repo/${this.nombre}/${obj.id}`,
                 data:   JSON.stringify(obj),
                 success: (res) => {
@@ -56,6 +71,11 @@ class Repositorio {
             $.ajax({
                 method: "DELETE",
                 contentType: 'application/json',
+                headers: {
+                    "accept": "application/json",
+                    "Access-Control-Allow-Origin":"*"
+                },
+                crossDomain: true,
                 url:    `${this.api_uri}/repo/${this.nombre}/${id}`,
                 success: (res) => {
                     if (res.error) reject(res.error);
