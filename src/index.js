@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require ('cors'); 
 const repositorio = require('./repositorio');
 
 const app = express();
@@ -20,6 +21,7 @@ const log = (texto, salto = true) => {
 }
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/api/repo/:nombre', async (req, res) => {
     const nombre = req.params.nombre;

@@ -1,12 +1,15 @@
 class Repositorio {
-    constructor(nombre) { this.nombre = nombre }
+    constructor(api_uri, nombre) {
+        this.api_uri = api_uri;
+        this.nombre = nombre;
+    }
 
     obtener(filtro = {}) {
         return new Promise((resolve, reject) => {
             $.ajax({
                 method: "GET",
                 contentType: 'application/json',
-                url:    `/api/repo/${this.nombre}?${$.param(filtro)}`,
+                url:    `${this.api_uri}/repo/${this.nombre}?${$.param(filtro)}`,
                 success: (res) => {
                     if (res.error) reject(res.error);
                     resolve(res.datos);
@@ -21,7 +24,7 @@ class Repositorio {
             $.ajax({
                 method: "POST",
                 contentType: 'application/json',
-                url:    `/api/repo/${this.nombre}`,
+                url:    `${this.api_uri}/repo/${this.nombre}`,
                 data:   JSON.stringify(obj),
                 success: (res) => {
                     if (res.error) reject(res.error);
@@ -37,7 +40,7 @@ class Repositorio {
             $.ajax({
                 method: "PUT",
                 contentType: 'application/json',
-                url:    `/api/repo/${this.nombre}/${obj.id}`,
+                url:    `${this.api_uri}/repo/${this.nombre}/${obj.id}`,
                 data:   JSON.stringify(obj),
                 success: (res) => {
                     if (res.error) reject(res.error);
@@ -53,7 +56,7 @@ class Repositorio {
             $.ajax({
                 method: "DELETE",
                 contentType: 'application/json',
-                url:    `/api/repo/${this.nombre}/${id}`,
+                url:    `${this.api_uri}/repo/${this.nombre}/${id}`,
                 success: (res) => {
                     if (res.error) reject(res.error);
                     resolve(res.datos);
