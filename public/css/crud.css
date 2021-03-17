@@ -23,6 +23,8 @@
 .pagina .pagina-crud .listado .mensaje {
     color: #666;
     text-align: center;
+    font-size: 0.75em;
+    padding: 1rem;
 }
 .pagina .pagina-crud .listado .listado-fila, .pagina .pagina-crud .listado .listado-cabecera {
     display: flex;

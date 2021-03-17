@@ -27,13 +27,11 @@ class Crud extends Pagina {
         
         const resultados = await this.repositorio.obtener(filtro);
 
-        if (resultados && resultados.length > 0) {
-            const cabecera = this.filaCabecera();
-            if (cabecera) {
-                cabecera.addClass('listado-cabecera');
-                this.listado.append(cabecera);
-            }
-        } else {
+        const cabecera = this.filaCabecera();
+        cabecera.addClass('listado-cabecera');
+        this.listado.append(cabecera);
+
+        if (!resultados || resultados.length === 0) {
             this.listado.append(`<label class="mensaje">
                 No se han encontrado resultados
             </label>`);
@@ -51,52 +49,62 @@ class Crud extends Pagina {
     crear() {
         const obj = {};
 
-        const ctn = $(`<div class="formulario">
-            <h2>Crear</h2>
-        </div>`);
+        const ctn = $(`<div class="formulario"><h2>Crear</h2></div>`);
 
-        ctn.append(this.formularioCreacion(obj));
-
-        ctn.append(BotonPrincipal({ titulo: 'Crear', alClick: async () => {
+        const crear = $(`<button class="boton boton-principal">Crear</button>`);
+        crear.click(async () => {
             await this.repositorio.crear(obj);
 
             this.cerrarSlide();
             this.buscar({});
-        } }));
-        
-        ctn.append(Boton({ titulo: 'Cancelar', alClick: () => {
+        })
+
+        const cancelar = $(`<button class="boton">Cancelar</button>`);
+        cancelar.click(() => {
             this.cerrarSlide();
             this.buscar();
-        } }));
+        })
+
+        ctn.append(
+            this.formularioCreacion(obj),
+            crear,
+            cancelar
+        );
 
         this.abrirSlide(ctn);
     }
 
     editar(obj = {}) {
-        const ctn = $(`<div class="formulario">
-            <h2>Editar</h2>
-        </div>`);
+        const ctn = $(`<div class="formulario"><h2>Editar</h2></div>`);
 
-        ctn.append(this.formularioEdicion(obj));
-
-        ctn.append(BotonPrincipal({ titulo: 'Guardar', alClick: async () => {
+        const guardar = $(`<button class="boton boton-principal">Guardar</button>`);
+        guardar.click(async () => {
             await this.repositorio.actualizar(obj);
 
             this.cerrarSlide();
             this.buscar({});
-        } }));
+        })
         
-        ctn.append(Boton({ titulo: 'Eliminar', alClick: async () => {
+        const eliminar = $(`<button class="boton">Eliminar</button>`);
+        eliminar.click(async () => {
             await this.repositorio.remover(obj.id);
 
             this.cerrarSlide()
             this.buscar({});
-        } }));
+        })
         
-        ctn.append(Boton({ titulo: 'Cancelar', alClick: () => {
+        const cancelar = $(`<button class="boton">Cancelar</button>`);
+        cancelar.click(() => {
             this.cerrarSlide();            
             this.buscar({});
-        } }));
+        })
+        
+        ctn.append(
+            this.formularioEdicion(obj),
+            guardar,
+            eliminar,
+            cancelar
+        );
 
         this.abrirSlide(ctn);
     }
