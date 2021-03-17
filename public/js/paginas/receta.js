@@ -61,6 +61,9 @@ class PaginaRecetas extends Crud {
     formularioEdicion(datos) { return this.formulario(datos) }
 
     formulario(datos) {
+        const codigo = $('<input  />')
+
+
         return [
             Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }),
             Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }),
