@@ -2,8 +2,8 @@ const express = require('express');
 const repositorio = require('./repositorio');
 
 const app = express();
-const port = 3000;
-const debug = true;
+const port = process.env.PORT || 3000;
+const debug = false;
 
 const repoitorios = {
     costos: new repositorio.Repositorio(),
