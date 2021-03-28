@@ -3,31 +3,49 @@ class Crud extends Pagina {
         super(nombre);
         
         this.repositorio = repositorio;
-        this.listado = $(`<div class="listado"><div>`);
 
+        this.listado = $(`<div class="listado"><div>`);
+        
         this.buscar();
     }
 
     // metodos abstractos
 
-    filaCabecera() { return null }
+    filtrador() { return $('<div></div>'); }
 
-    fila(fila) { return null }
+    listadoCabecera() { return $('<div></div>'); }
 
-    cabeceraBusqueda(contenedor) { }
+    listadoFila(datos) { return $('<div></div>'); }
 
-    formularioCreacion(datos) { return null }
+    formularioCreacion(datos) { return $('<div></div>'); }
 
-    formularioEdicion(datos) { return null }
+    formularioEdicion(datos) { return $('<div></div>'); }
+
+    formatearDatosFormulario(datos, creacion) { return datos; }
+
+    formatearDatosRepositorio(datos) { return datos; }
 
     // metodos concretos
 
-    async buscar(filtro) {
-        this.listado.empty();
-        
+    _contenido() {
+        const contenido = $('<div class="ancho pagina-crud"></div>');
+
+        const cabecera = this.filtrador();
+        cabecera.addClass('cabecera');
+
+        contenido.append(cabecera, this.listado);
+
+        this.buscar();
+
+        return contenido
+    }
+
+    async buscar(filtro) {        
         const resultados = await this.repositorio.obtener(filtro);
 
-        const cabecera = this.filaCabecera();
+        this.listado.empty();
+
+        const cabecera = this.listadoCabecera();
         cabecera.addClass('listado-cabecera');
         this.listado.append(cabecera);
 
@@ -35,25 +53,30 @@ class Crud extends Pagina {
             this.listado.append(`<label class="mensaje">
                 No se han encontrado resultados
             </label>`);
+        } else {
+            resultados.forEach(datos => {
+                const datos_formateados = this.formatearDatosRepositorio(datos);
+
+                const vista = this.listadoFila(datos_formateados);
+                if (!vista) return;
+    
+                vista.addClass('listado-fila');
+                this.listado.append(vista);
+            })
         }
-
-        resultados.forEach(fila => {
-            const vista = this.fila(fila);
-            if (!vista) return;
-
-            vista.addClass('listado-fila');
-            this.listado.append(vista);
-        })
     }
 
     crear() {
-        const obj = {};
+        const datos = {};
 
         const ctn = $(`<div class="formulario"><h2>Crear</h2></div>`);
 
         const crear = $(`<button class="boton boton-principal">Crear</button>`);
         crear.click(async () => {
-            await this.repositorio.crear(obj);
+            const datos_formateados = this.formatearDatosFormulario(datos, true);
+            if (!datos_formateados) return;
+
+            await this.repositorio.crear(datos_formateados);
 
             this.cerrarSlide();
             this.buscar({});
@@ -66,7 +89,7 @@ class Crud extends Pagina {
         })
 
         ctn.append(
-            this.formularioCreacion(obj),
+            this.formularioCreacion(datos),
             crear,
             cancelar
         );
@@ -74,12 +97,15 @@ class Crud extends Pagina {
         this.abrirSlide(ctn);
     }
 
-    editar(obj = {}) {
+    editar(datos = {}) {
         const ctn = $(`<div class="formulario"><h2>Editar</h2></div>`);
 
         const guardar = $(`<button class="boton boton-principal">Guardar</button>`);
         guardar.click(async () => {
-            await this.repositorio.actualizar(obj);
+            const datos_formateados = this.formatearDatosFormulario(datos, false);
+            if (!datos_formateados) return;
+
+            await this.repositorio.actualizar(datos_formateados);
 
             this.cerrarSlide();
             this.buscar({});
@@ -87,7 +113,7 @@ class Crud extends Pagina {
         
         const eliminar = $(`<button class="boton">Eliminar</button>`);
         eliminar.click(async () => {
-            await this.repositorio.remover(obj.id);
+            await this.repositorio.remover(datos.id);
 
             this.cerrarSlide()
             this.buscar({});
@@ -100,7 +126,7 @@ class Crud extends Pagina {
         })
         
         ctn.append(
-            this.formularioEdicion(obj),
+            this.formularioEdicion(datos),
             guardar,
             eliminar,
             cancelar
@@ -109,18 +135,5 @@ class Crud extends Pagina {
         this.abrirSlide(ctn);
     }
     
-    eliminar(id) {
-        return this.repositorio.remover(id)
-    }
-
-    _contenido() {
-        const ctn = $('<div class="ancho pagina-crud"></div>');
-
-        const cabecera = this.cabeceraBusqueda();
-        cabecera.addClass('cabecera');
-
-        ctn.append(cabecera, this.listado);
-        
-        return ctn;
-    }
+    eliminar(id) { return this.repositorio.remover(id) }
 }

@@ -1,32 +1,7 @@
 class PaginaEmpleados extends Crud {
-    constructor() { super('Empleados', contexto.repositorios.empleados) }
+    constructor(repoEmpleados) { super('Empleados', repoEmpleados) }
 
-    filaCabecera() {
-        return $(`<div>
-            <label class="nombre">Nombre</label>
-            <label class="cargo">Cargo</label>
-            <label class="horas">Horas Semanales</label>
-            <label class="salario">Salario Mensual</label>
-            <label class="editar"></label>
-        </div>`);
-    }
-
-    fila(obj) {
-        const ctn = $(`<div class="listado-fila">
-            <label class="nombre">${obj.nombre}</label>
-            <label class="cargo">${obj.cargo}</label>
-            <label class="horas">${obj.horas_semanales}</label>
-            <label class="salario">$ ${obj.salario}</label>
-        </div>`);
-
-        const editar = $('<button>Editar</button>');
-        editar.click(() => this.editar(obj));
-        ctn.append(editar);
-
-        return ctn;
-    }
-
-    cabeceraBusqueda() {
+    filtrador() {
         const cabecera = $('<div><div>');
 
         cabecera.append(
@@ -49,6 +24,31 @@ class PaginaEmpleados extends Crud {
         );
 
         return cabecera;
+    }
+
+    listadoCabecera() {
+        return $(`<div>
+            <label class="nombre">Nombre</label>
+            <label class="cargo">Cargo</label>
+            <label class="horas">Horas Semanales</label>
+            <label class="salario">Salario Mensual</label>
+            <label class="editar"></label>
+        </div>`);
+    }
+
+    listadoFila(obj) {
+        const ctn = $(`<div class="listado-fila">
+            <label class="nombre">${obj.nombre}</label>
+            <label class="cargo">${obj.cargo}</label>
+            <label class="horas">${obj.horas_semanales}</label>
+            <label class="salario">$ ${obj.salario}</label>
+        </div>`);
+
+        const editar = $('<button>Editar</button>');
+        editar.click(() => this.editar(obj));
+        ctn.append(editar);
+
+        return ctn;
     }
 
     formularioCreacion(datos) { return this.formulario(datos) }

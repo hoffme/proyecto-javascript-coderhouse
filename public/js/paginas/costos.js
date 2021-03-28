@@ -1,32 +1,7 @@
 class PaginaCostos extends Crud {
-    constructor() { super('Costos', contexto.repositorios.costos) }
+    constructor(repoCostos) { super('Costos', repoCostos) }
 
-    filaCabecera() {
-        return $(`<div>
-            <label class="nombre">Nombre</label>
-            <label class="empresa">Empresa</label>
-            <label class="importe">Importe</label>
-            <label class="periodisidad">Periodisidad</label>
-            <label class="editar"></label>
-        </div>`);
-    }
-
-    fila(obj) {
-        const ctn = $(`<div class="listado-fila">
-            <label class="nombre">${obj.nombre}</label>
-            <label class="empresa">${obj.empresa}</label>
-            <label class="importe">$ ${obj.importe}</label>
-            <label class="periodisidad">${obj.periodisidad}</label>
-        </div>`);
-
-        const editar = $('<button>Editar</button>');
-        editar.click(() => this.editar(obj));
-        ctn.append(editar);
-
-        return ctn;
-    }
-
-    cabeceraBusqueda() {
+    filtrador() {
         const cabecera = $('<div><div>');
 
         cabecera.append(
@@ -51,8 +26,32 @@ class PaginaCostos extends Crud {
         return cabecera;
     }
 
-    formularioCreacion(datos) { return this.formulario(datos) }
+    listadoCabecera() {
+        return $(`<div>
+            <label class="nombre">Nombre</label>
+            <label class="empresa">Empresa</label>
+            <label class="importe">Importe</label>
+            <label class="periodisidad">Periodisidad</label>
+            <label class="editar"></label>
+        </div>`);
+    }
 
+    listadoFila(obj) {
+        const ctn = $(`<div class="listado-fila">
+            <label class="nombre">${obj.nombre}</label>
+            <label class="empresa">${obj.empresa}</label>
+            <label class="importe">$ ${obj.importe}</label>
+            <label class="periodisidad">${obj.periodisidad}</label>
+        </div>`);
+
+        const editar = $('<button>Editar</button>');
+        editar.click(() => this.editar(obj));
+        ctn.append(editar);
+
+        return ctn;
+    }
+
+    formularioCreacion(datos) { return this.formulario(datos) }
     formularioEdicion(datos) { return this.formulario(datos) }
 
     formulario(datos) {

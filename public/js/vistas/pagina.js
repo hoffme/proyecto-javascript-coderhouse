@@ -3,7 +3,17 @@ class Pagina {
         this.nombre = nombre;
         
         this.ctn = $(`<main class="pagina"></main>`);
+        this.slide = undefined;
+    }
+
+    abrir() {
         this.slide = $(`<aside class="slide"></aside>`);
+        this.ctn.append(this.slide, this._contenido());
+    }
+
+    cerrar() {
+        this.slide = undefined;
+        this.ctn.empty();
     }
 
     abrirSlide(contenido) {
@@ -13,19 +23,10 @@ class Pagina {
     }
 
     cerrarSlide() {
+        console.log(this.slide);
         this.slide.animate({ width: 0 }, "fast");
         this.slide.empty();
     }
 
-    _contenido() { }
-
-    render() {
-        this.ctn.empty();
-        
-        this.ctn.prepend(`<h1>${this.nombre}</h1>`);
-        this.ctn.prepend(this.slide);
-        this.ctn.append(this._contenido());
-        
-        return this.ctn;
-    }
+    render() { return this.ctn }
 }

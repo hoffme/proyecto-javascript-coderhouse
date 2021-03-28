@@ -1,30 +1,7 @@
 class PaginaProvedores extends Crud {
-    constructor() { super('Provedores', contexto.repositorios.provedores) }
+    constructor(repoProveedores) { super('Provedores', repoProveedores) }
 
-    filaCabecera() {
-        return $(`<div>
-            <label class="nombre">Nombre</label>
-            <label class="ciudad">Ciudad</label>
-            <label class="direccion">Direccion</label>
-            <label class="editar"></label>
-        </div>`);
-    }
-
-    fila(obj) {
-        const ctn = $(`<div class="listado-fila">
-            <label class="nombre">${obj.nombre}</label>
-            <label class="ciudad">${obj.ciudad}</label>
-            <label class="direccion">${obj.direccion}</label>
-        </div>`);
-
-        const editar = $('<button>Editar</button>');
-        editar.click(() => this.editar(obj));
-        ctn.append(editar);
-
-        return ctn;
-    }
-
-    cabeceraBusqueda() {
+    filtrador() {
         const cabecera = $('<div><div>');
 
         cabecera.append(
@@ -47,6 +24,29 @@ class PaginaProvedores extends Crud {
         );
 
         return cabecera;
+    }
+
+    listadoCabecera() {
+        return $(`<div>
+            <label class="nombre">Nombre</label>
+            <label class="ciudad">Ciudad</label>
+            <label class="direccion">Direccion</label>
+            <label class="editar"></label>
+        </div>`);
+    }
+
+    listadoFila(obj) {
+        const ctn = $(`<div class="listado-fila">
+            <label class="nombre">${obj.nombre}</label>
+            <label class="ciudad">${obj.ciudad}</label>
+            <label class="direccion">${obj.direccion}</label>
+        </div>`);
+
+        const editar = $('<button>Editar</button>');
+        editar.click(() => this.editar(obj));
+        ctn.append(editar);
+
+        return ctn;
     }
 
     formularioCreacion(datos) { return this.formulario(datos) }
