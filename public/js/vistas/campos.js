@@ -185,8 +185,10 @@ class Seleccion extends Campo {
             const checkbox = $(`<input type="checkbox" id="${nombreGrupo}-${id}" name="${nombreGrupo}" />`);
             checkbox.prop('checked', checked);
             checkbox.change(() => {
-                if (checkbox.prop('checked')) this.valor.push(id);
-                else this.valor.splice(this.valor.indexOf(id), 1);
+                if (checkbox.prop('checked')) {
+                    if (this.multiple) this.valor.push(id);
+                    else this.valor = [id];
+                } else this.valor.splice(this.valor.indexOf(id), 1);
 
                 $(`input:checkbox[name='${nombreGrupo}']`).prop('checked', false);
                 this.valor.forEach(id => {

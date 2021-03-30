@@ -59,7 +59,7 @@ class PaginaCostos extends Crud {
             Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
             Input.Texto({ titulo: 'Empresa', valor: datos.empresa, alCambiar: t => datos.empresa = t }).render(),
             Input.Numero({ titulo: 'Importe', valor: datos.importe, alCambiar: t => datos.importe = t }).render(),
-            Seleccion.Opciones({ titulo: 'Periodisidad', multiple:true, valor: datos.periodisidad, alCambiar: t => datos.periodisidad = t, opciones: {
+            Seleccion.Opciones({ titulo: 'Periodisidad', multiple:false, valor: datos.periodisidad, alCambiar: t => datos.periodisidad = t, opciones: {
                 diaria: 'Diaria',
                 semanal: 'Semanal',
                 mensual: 'Mensual',
