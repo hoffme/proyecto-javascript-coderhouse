@@ -5,7 +5,7 @@ class PaginaProvedores extends Crud {
         const cabecera = $('<div><div>');
 
         cabecera.append(
-            Texto({
+            Input.Texto({
                 placeholder: 'Buscar ...',
                 alCambiar: texto => {
                     let filtro = {
@@ -16,7 +16,7 @@ class PaginaProvedores extends Crud {
 
                     this.buscar(filtro)
                 }
-            }),
+            }).render(),
             BotonPrincipal({
                 titulo: 'Crear Provedor',
                 alClick: () => this.crear()
@@ -55,12 +55,12 @@ class PaginaProvedores extends Crud {
 
     formulario(datos) {
         return [
-            Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }),
-            Texto({ titulo: 'ciudad', valor: datos.ciudad, alCambiar: t => datos.ciudad = t }),
-            Texto({ titulo: 'Direccion', valor: datos.direccion, alCambiar: t => datos.direccion = t }),
-            Texto({ titulo: 'Nombre Contacto', valor: datos.nombre_contacto, alCambiar: t => datos.nombre_contacto = t }),
-            Texto({ titulo: 'Telefono Contacto', valor: datos.telefono_contacto, alCambiar: t => datos.telefono_contacto = t }),
-            Texto({ titulo: 'Correo Contacto', valor: datos.correo_contacto, alCambiar: t => datos.correo_contacto = t }),
+            Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
+            Input.Texto({ titulo: 'ciudad', valor: datos.ciudad, alCambiar: t => datos.ciudad = t }).render(),
+            Input.Texto({ titulo: 'Direccion', valor: datos.direccion, alCambiar: t => datos.direccion = t }).render(),
+            Input.Texto({ titulo: 'Nombre Contacto', valor: datos.nombre_contacto, alCambiar: t => datos.nombre_contacto = t }).render(),
+            Input.Texto({ titulo: 'Telefono Contacto', valor: datos.telefono_contacto, alCambiar: t => datos.telefono_contacto = t }).render(),
+            Input.Texto({ titulo: 'Correo Contacto', valor: datos.correo_contacto, alCambiar: t => datos.correo_contacto = t }).render(),
         ]
     }
 }

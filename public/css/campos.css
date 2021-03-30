@@ -18,7 +18,7 @@
     color: #aaa;
     font-size: 0.75em;
 }
-.campo.campo-input input, .campo.campo-opciones select {
+.input {
     padding: 0.5rem;
     font-size: 1em;
     background-color: transparent;
@@ -27,15 +27,10 @@
     color: #aaa;
     border-bottom: 1px solid transparent;
 }
-.campo.campo-input input:focus, .campo.campo-opciones select:focus {
+.input:focus {
     outline: none;
     color: white;
     border-bottom: 1px solid var(--principal);
-}
-
-.campo.campo-opciones select option {
-    background-color: var(--superficie-1);
-    color: var(--sobre-superficie-1);
 }
 
 .campo.campo-switch .switch {
@@ -85,6 +80,19 @@ input[type="checkbox"]:checked + .switch-slider:before {
     transform: translateX(1.5rem);
 }
 
+.campo.campo-seleccion .seleccion {
+    display: flex;
+    flex-direction: column;
+}
+.campo.campo-seleccion > * { margin: 0.25rem 0; }
+.campo.campo-seleccion .listado {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 150px;
+    color: #999;
+}
+
 .boton {
     display: flex;
     width: calc(100% - 1rem);
@@ -105,4 +113,12 @@ input[type="checkbox"]:checked + .switch-slider:before {
     background: var(--principal);
     box-shadow: 1px 1px 3px var(--sombra-principal);
     color: var(--sobre-principal);
+}
+.boton.boton-simple {
+    background: transparent;
+    box-shadow: none;
+    border-radius: none;
+    padding: 0.5rem;
+    margin: 0rem;
+    font-weight: normal;
 }

@@ -23,7 +23,6 @@ class Pagina {
     }
 
     cerrarSlide() {
-        console.log(this.slide);
         this.slide.animate({ width: 0 }, "fast");
         this.slide.empty();
     }

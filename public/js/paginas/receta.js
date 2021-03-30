@@ -5,7 +5,7 @@ class PaginaRecetas extends Crud {
         const cabecera = $('<div><div>');
 
         cabecera.append(
-            Texto({
+            Input.Texto({
                 placeholder: 'Buscar ...',
                 alCambiar: texto => {
                     let filtro = {
@@ -16,7 +16,7 @@ class PaginaRecetas extends Crud {
 
                     this.buscar(filtro)
                 }
-            }),
+            }).render(),
             BotonPrincipal({
                 titulo: 'Crear Receta',
                 alClick: () => this.crear()
@@ -59,10 +59,9 @@ class PaginaRecetas extends Crud {
     formulario(datos) {
         const codigo = $('<input  />')
 
-
         return [
-            Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }),
-            Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }),
+            Input.Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }).render(),
+            Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
         ]
     }
 

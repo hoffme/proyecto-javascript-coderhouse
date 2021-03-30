@@ -5,7 +5,7 @@ class PaginaMateriaPrima extends Crud {
         const cabecera = $('<div><div>');
 
         cabecera.append(
-            Texto({
+            Input.Texto({
                 placeholder: 'Buscar ...',
                 alCambiar: texto => {
                     let filtro = {
@@ -16,7 +16,7 @@ class PaginaMateriaPrima extends Crud {
 
                     this.buscar(filtro)
                 }
-            }),
+            }).render(),
             BotonPrincipal({
                 titulo: 'Crear Materia Prima',
                 alClick: () => this.crear()
@@ -57,15 +57,15 @@ class PaginaMateriaPrima extends Crud {
 
     formulario(datos) {
         return [
-            Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }),
-            Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }),
-            Numero({ titulo: 'Precio', valor: datos.precio, alCambiar: t => datos.precio = t }),
-            Numero({ titulo: 'Cantidad', valor: datos.cantidad, alCambiar: t => datos.cantidad = t }),
-            Seleccion({ titulo: 'Unidad de Medida', valor: datos.unidad, alCambiar: t => datos.unidad = t, opciones: [
+            Input.Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }).render(),
+            Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
+            Input.Numero({ titulo: 'Precio', valor: datos.precio, alCambiar: t => datos.precio = t }).render(),
+            Input.Numero({ titulo: 'Cantidad', valor: datos.cantidad, alCambiar: t => datos.cantidad = t }).render(),
+            Seleccion.Opciones({ titulo: 'Unidad de Medida', valor: datos.unidad, alCambiar: t => datos.unidad = t, opciones: [
                 { titulo: 'Masa (gramos)', valor: 'masa' },
                 { titulo: 'Volumen (mililitros)', valor: 'volumen' },
                 { titulo: 'Unitario', valor: 'unitario' },
-            ]}),
+            ]}).render(),
         ]
     }
 }

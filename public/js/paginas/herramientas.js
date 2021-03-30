@@ -5,7 +5,7 @@ class PaginaHerramientas extends Crud {
         const cabecera = $('<div><div>');
 
         cabecera.append(
-            Texto({
+            Input.Texto({
                 placeholder: 'Buscar ...',
                 alCambiar: texto => {
                     let filtro = {
@@ -16,7 +16,7 @@ class PaginaHerramientas extends Crud {
 
                     this.buscar(filtro)
                 }
-            }),
+            }).render(),
             BotonPrincipal({
                 titulo: 'Crear Herramienta',
                 alClick: () => this.crear()
@@ -55,16 +55,16 @@ class PaginaHerramientas extends Crud {
 
     formulario(datos) {
         return [
-            Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }),
-            Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }),
-            Numero({ titulo: 'Consumo', placeholder: 'Watts/Hora', valor: datos.consumo, alCambiar: t => datos.consumo = t }),
-            Numero({ titulo: 'Capacidad', valor: datos.capacidad, alCambiar: t => datos.capacidad = t }),
-            Seleccion({ titulo: 'Unidad de Capacidad', valor: datos.unidad, alCambiar: t => datos.unidad = t, opciones: [
+            Input.Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }).render(),
+            Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
+            Input.Numero({ titulo: 'Consumo', placeholder: 'Watts/Hora', valor: datos.consumo, alCambiar: t => datos.consumo = t }).render(),
+            Input.Numero({ titulo: 'Capacidad', valor: datos.capacidad, alCambiar: t => datos.capacidad = t }).render(),
+            Seleccion.Opciones({ titulo: 'Unidad de Capacidad', valor: datos.unidad, alCambiar: t => datos.unidad = t, opciones: [
                 { titulo: 'Masa (gramos)', valor: 'masa' },
                 { titulo: 'Volumen (mililitros)', valor: 'volumen' },
                 { titulo: 'Latas (Medianas)', valor: 'lat-med' },
                 { titulo: 'Latas (Grandes)', valor: 'lat-gra' }
-            ]}),        
+            ]}).render(),        
         ]
     }
 }

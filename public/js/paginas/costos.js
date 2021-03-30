@@ -5,7 +5,7 @@ class PaginaCostos extends Crud {
         const cabecera = $('<div><div>');
 
         cabecera.append(
-            Texto({
+            Input.Texto({
                 placeholder: 'Buscar ...',
                 alCambiar: texto => {
                     let filtro = {
@@ -16,7 +16,7 @@ class PaginaCostos extends Crud {
 
                     this.buscar(filtro)
                 }
-            }),
+            }).render(),
             BotonPrincipal({
                 titulo: 'Crear Costo Fijo',
                 alClick: () => this.crear()
@@ -56,15 +56,15 @@ class PaginaCostos extends Crud {
 
     formulario(datos) {
         return [
-            Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }),
-            Texto({ titulo: 'Empresa', valor: datos.empresa, alCambiar: t => datos.empresa = t }),
-            Numero({ titulo: 'Importe', valor: datos.importe, alCambiar: t => datos.importe = t }),
-            Seleccion({ titulo: 'Periodisidad', valor: datos.periodisidad, alCambiar: t => datos.periodisidad = t, opciones: [
-                { titulo: 'Diaria', valor: 'diaria' },
-                { titulo: 'Semanal', valor: 'semanal' },
-                { titulo: 'Mensual', valor: 'mensual' },
-                { titulo: 'Sin Periodo', valor: '-' },
-            ]}),
+            Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
+            Input.Texto({ titulo: 'Empresa', valor: datos.empresa, alCambiar: t => datos.empresa = t }).render(),
+            Input.Numero({ titulo: 'Importe', valor: datos.importe, alCambiar: t => datos.importe = t }).render(),
+            Seleccion.Opciones({ titulo: 'Periodisidad', multiple:true, valor: datos.periodisidad, alCambiar: t => datos.periodisidad = t, opciones: {
+                diaria: 'Diaria',
+                semanal: 'Semanal',
+                mensual: 'Mensual',
+                sin: 'Sin Periodo',
+            }}).render(),
         ]
     }
 }

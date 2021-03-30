@@ -1,80 +1,217 @@
-function Campo({titulo}) {
-    const contenedor = $('<div class="campo"></div>');
-    if (titulo) contenedor.prepend(`<label class="titulo">${titulo}</label>`);
-    return contenedor;
+class Campo {
+    constructor(titulo, valor = null, alCambiar = () => {}, estilo = '') {
+        this.titulo = titulo;
+        this.valor = valor;
+        this.alCambiar = alCambiar;
+
+        this.contenedor = $(`<div class="campo ${estilo}"></div>`);
+    }
+
+    contenido() { return null }
+
+    render() {
+        this.contenedor.empty();
+
+        if (this.titulo) {
+            this.contenedor.prepend(`<label class="titulo">${this.titulo}</label>`);
+        }
+        this.contenedor.append(this.contenido());
+
+        return this.contenedor;
+    }
 }
 
-function Input({titulo, valor, tipo = 'text', alCambiar, placeholder, disabled}) {
-    const campo = Campo({titulo});
-    campo.addClass('campo-input');
-
-    const input = $(`<input type="${tipo}" />`);
-    if (valor) input.val(valor);
-    if (placeholder) input.attr("placeholder", placeholder);
-    if (disabled) input.prop('disabled', disabled);
-    
-    if (alCambiar) input.on("input", () => alCambiar(input.val()));
-
-    campo.append(input);
-
-    return campo;
-}
-
-function Texto({titulo, valor, alCambiar, placeholder, disabled}) {
-    return Input({titulo, valor, alCambiar, placeholder, disabled});
-}
-
-function Numero({titulo, valor, alCambiar, placeholder, disabled}) {
-    return Input({titulo, valor, alCambiar, tipo:'number', placeholder, disabled});
-}
-
-function Switch({titulo, valor, alCambiar, disabled}) {
-    const contenedor = Campo({titulo});
-    campo.addClass('campo-switch');
-
-    const input = $(`<input type="checkbox" />`);
-    if (valor) input.val(valor);
-    if (alCambiar) input.change(() => alCambiar(input.prop("checked")));
-    if (disabled) input.prop('disabled', disabled);
-
-    const switchCtn = $(`<label class="switch">
-        <span class="switch-slider"></span>
-    </label>`);
-    
-    switchCtn.prepend(input);
-    contenedor.append(switchCtn);
-
-    return contenedor;
-}
-
-function Seleccion({titulo, valor, alCambiar, opciones, disabled}) {
-    const contenedor = Campo({titulo});
-    contenedor.addClass('campo-opciones');
-    
-    const select = $(`<select class="opciones"></select>`);
-    if (alCambiar) select.change(() => alCambiar(select.val()));
-    if (disabled) input.prop('disabled', disabled);
-
-    select.prepend('<option disabled selected>Opciones</option>');
-
-    if (opciones) {
-        opciones.forEach(opcion => {
-            select.append(`
-                <option
-                    ${opcion.selected ? `selected="${opcion.selected}"` : ''}
-                    value="${opcion.valor}"
-                    class="opciones-opcion"
-                >
-                    ${opcion.titulo}
-                </option>`
-            );
+class Input extends Campo {
+    static Texto({ titulo, valor, alCambiar, placeholder, disabled }) {
+        return new Input({
+            titulo, 
+            valor, 
+            alCambiar
+        }, {
+            type: 'text',
+            placeholder,
+            disabled
         });
     }
 
-    if (valor) select.val(valor);
+    static Numero({ titulo, valor, alCambiar, placeholder, disabled }) {
+        return new Input(
+            {
+                titulo, 
+                valor, 
+                alCambiar
+            }, {
+                type: 'number',
+                placeholder,
+                disabled
+            }
+        );
+    }
 
-    contenedor.append(select);
+    static Booleano({ titulo, valor, alCambiar, disabled }) {
+        const input_wrapper = input => {
+            const contenedor = $(`<label class="switch">
+                <span class="switch-slider"></span>
+            </label>`);
+            
+            contenedor.prepend(input);
 
-    return contenedor;
+            return contenedor;
+        };
+        
+        const input_value = input => input.prop('checked');
+
+        return new Input(
+            {
+                titulo, 
+                valor, 
+                alCambiar,
+                estilo: 'campo-switch',
+                input_wrapper,
+                input_value
+            }, {
+                type: 'checkbox',
+                checked: valor,
+                disabled
+            }
+        );
+    }
+
+    constructor(
+        {
+            titulo, 
+            valor, 
+            alCambiar,
+            estilo,
+            input_wrapper = i => i, 
+            input_value = i => i.val()
+        },
+        propiedades
+    ) {
+        super(titulo, valor, alCambiar, estilo ? estilo : 'campo-input');
+
+        this.propiedades = propiedades;
+        this.input_wrapper = input_wrapper;
+        this.input_value = input_value;
+    }
+
+    contenido() {
+        const input = $(`<input class="input"/>`);
+        
+        if (this.valor) input.val(this.valor);
+        if (this.alCambiar) {
+            input.on("input", () => {
+                this.valor = input.val();
+                console.log(this.valor);
+                this.alCambiar(this.valor);
+            });
+        }
+
+        Object.entries(this.propiedades).forEach(([propiedad, valor]) => {
+            input.prop(propiedad, valor);
+        })
+
+        return this.input_wrapper(input);
+    }
 }
 
+class Seleccion extends Campo {
+    static async _buscadorOpciones(opciones, texto) {
+        if (!texto || texto.length === 0) return opciones;
+
+        return Object.entries(opciones).reduce((resultado, [id, titulo]) => {
+            if (titulo.toLowerCase().includes(texto.toLowerCase())) {
+                resultado[id] = titulo;
+            }
+            return resultado;
+        }, {});
+    }
+
+    static Consulta({ titulo, valor, alCambiar, multiple = false, consulta, desactivado }) {
+        return new Seleccion(
+            {
+                titulo,
+                valor: valor ? valor : [],
+                alCambiar,
+                multiple,
+                buscador: consulta
+            }, { desactivado }
+        );
+    }
+
+    static Opciones({ titulo, valor, alCambiar, multiple = false, opciones, desactivado }) {
+        return new Seleccion(
+            {
+                titulo,
+                valor: valor ? valor : [],
+                alCambiar,
+                multiple,
+                buscador: texto => Seleccion._buscadorOpciones(opciones, texto)
+            }, { desactivado }
+        );
+    }
+
+    constructor(
+        {
+            titulo, 
+            valor, 
+            alCambiar,
+            multiple,
+            buscador
+        },
+        propiedades
+    ) {
+        super(titulo, valor, alCambiar, 'campo-seleccion');
+
+        this.propiedades = propiedades;
+        this.multiple = multiple;
+        this.buscador = buscador;
+
+        this.listado = $(`<div class="listado"></div>`);
+    }
+
+    async buscar(texto) {
+        const resultados = await this.buscador(texto);
+
+        this.listado.empty();
+        
+        const nombreGrupo = `grupo-seleccion-${Math.floor(Math.random() * 1000)}`;
+
+        Object.entries(resultados).forEach(([id, titulo]) => {
+            const contenedor = $(`<label>${titulo}</label>`);
+
+            const checked = this.valor.indexOf(id) > -1;
+
+            const checkbox = $(`<input type="checkbox" id="${nombreGrupo}-${id}" name="${nombreGrupo}" />`);
+            checkbox.prop('checked', checked);
+            checkbox.change(() => {
+                if (checkbox.prop('checked')) this.valor.push(id);
+                else this.valor.splice(this.valor.indexOf(id), 1);
+
+                $(`input:checkbox[name='${nombreGrupo}']`).prop('checked', false);
+                this.valor.forEach(id => {
+                    $(`input:checkbox[id='${nombreGrupo}-${id}']`).prop('checked', true);
+                })
+
+                if (this.alCambiar) this.alCambiar(this.valor);
+            });
+
+            contenedor.prepend(checkbox);
+
+            this.listado.append(contenedor);
+        });
+    }
+
+    contenido() {
+        const contenedor = $(`<div class="seleccion"></div>`);
+
+        const input = $(`<input class="input" placeholder="Buscar" type="text" />`);
+        input.on("input", () => this.buscar(input.val()));
+
+        contenedor.append(input, this.listado);
+
+        this.buscar();
+
+        return contenedor;
+    }
+}

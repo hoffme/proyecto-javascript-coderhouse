@@ -5,7 +5,7 @@ class PaginaEmpleados extends Crud {
         const cabecera = $('<div><div>');
 
         cabecera.append(
-            Texto({
+            Input.Texto({
                 placeholder: 'Buscar ...',
                 alCambiar: texto => {
                     let filtro = {
@@ -16,7 +16,7 @@ class PaginaEmpleados extends Crud {
 
                     this.buscar(filtro)
                 }
-            }),
+            }).render(),
             BotonPrincipal({
                 titulo: 'Crear Empleado',
                 alClick: () => this.crear()
@@ -57,17 +57,17 @@ class PaginaEmpleados extends Crud {
 
     formulario(datos) {
         return [
-            Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }),
-            Numero({ titulo: 'Horas Semanales', valor: datos.horas_semanales, alCambiar: t => datos.horas_semanales = t }),
-            Numero({ titulo: 'Salario Mensual', valor: datos.salario, alCambiar: t => datos.salario = t }),
-            Seleccion({ titulo: 'Cargo', valor: datos.cargo, alCambiar: t => datos.cargo = t, opciones: [
+            Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
+            Input.Numero({ titulo: 'Horas Semanales', valor: datos.horas_semanales, alCambiar: t => datos.horas_semanales = t }).render(),
+            Input.Numero({ titulo: 'Salario Mensual', valor: datos.salario, alCambiar: t => datos.salario = t }).render(),
+            Seleccion.Opciones({ titulo: 'Cargo', valor: datos.cargo, alCambiar: t => datos.cargo = t, opciones: [
                 { titulo: 'Vendedor', valor: 'vendedor' },
                 { titulo: 'Panadero', valor: 'panadero' },
                 { titulo: 'Repostero', valor: 'repostero' },
                 { titulo: 'Cocinero', valor: 'cocinero' },
                 { titulo: 'Encargado', valor: 'encargado' },
                 { titulo: 'Gerente', valor: 'gerente' },
-            ]}),
+            ]}).render(),
         ]
     }
 }

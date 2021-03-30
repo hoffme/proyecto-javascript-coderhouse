@@ -73,6 +73,8 @@ class Crud extends Pagina {
 
         const crear = $(`<button class="boton boton-principal">Crear</button>`);
         crear.click(async () => {
+            console.log(datos);
+
             const datos_formateados = this.formatearDatosFormulario(datos, true);
             if (!datos_formateados) return;
 
