@@ -80,11 +80,23 @@ input[type="checkbox"]:checked + .switch-slider:before {
     transform: translateX(1.5rem);
 }
 
-.campo.campo-seleccion .seleccion {
+.campo.campo-seleccion {
+    position: relative;
     display: flex;
     flex-direction: column;
+    color: #aaa;
 }
-.campo.campo-seleccion > * { margin: 0.25rem 0; }
+.campo.campo-seleccion .contenedor-listado {
+    position: absolute;
+    background-color: var(--superficie-2);
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px var(--sombra-superficie-2);
+    padding: 0.5rem;
+    top: 4rem;
+}
+.campo.campo-seleccion .valor {
+    padding: 0.5rem;
+}
 .campo.campo-seleccion .listado {
     display: flex;
     flex-direction: column;

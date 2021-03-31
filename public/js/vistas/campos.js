@@ -167,7 +167,22 @@ class Seleccion extends Campo {
         this.multiple = multiple;
         this.buscador = buscador;
 
+        this.contenedor_valor = $(`<label class="valor">-<label>`);
+        this.contenedor_valor.html(
+            this.valor.length === 0 ? 
+                '-' :
+                this.valor.join(' - ')
+        )
+
+
+        this.contenedor_listado = $(`<div class="contenedor-listado"></div>`);
+
+        const input = $(`<input class="input" placeholder="Buscar" type="text" />`);
+        input.on("input", () => this.buscar(input.val()));
+
         this.listado = $(`<div class="listado"></div>`);
+
+        this.contenedor_listado.append(input, this.listado);
     }
 
     async buscar(texto) {
@@ -196,6 +211,11 @@ class Seleccion extends Campo {
                 })
 
                 if (this.alCambiar) this.alCambiar(this.valor);
+                this.contenedor_valor.html(
+                    this.valor.length === 0 ? 
+                        '-' :
+                        this.valor.join(' - ')
+                )
             });
 
             contenedor.prepend(checkbox);
@@ -205,15 +225,25 @@ class Seleccion extends Campo {
     }
 
     contenido() {
-        const contenedor = $(`<div class="seleccion"></div>`);
+        this.contenedor_valor.click(e => {
+            e.stopPropagation();
+            if (this.contenedor_listado.is(":visible")) return;
 
-        const input = $(`<input class="input" placeholder="Buscar" type="text" />`);
-        input.on("input", () => this.buscar(input.val()));
+            this.contenedor_listado.show();
+            this.buscar();
 
-        contenedor.append(input, this.listado);
+            const cerrar_listado = () => {
+                this.contenedor_listado.hide();
+                window.removeEventListener('click', cerrar_listado);
+            }
 
-        this.buscar();
+            window.addEventListener('click', cerrar_listado);
+        })
 
-        return contenedor;
+        this.contenedor_listado.click(e => e.stopPropagation());
+
+        this.contenedor_listado.hide();
+
+        return [ this.contenedor_valor, this.contenedor_listado, ];
     }
 }
