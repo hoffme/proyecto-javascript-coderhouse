@@ -62,6 +62,15 @@ class PaginaRecetas extends Crud {
         return [
             Input.Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }).render(),
             Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
+            new Arreglo({ titulo: 'Tareas', valor: datos.tareas, alCambiar: t => datos.tareas = t, formulario: (datos = {}) => {
+                return [
+                    Input.Texto({ titulo: 'Descripcion', valor: datos.descripcion, alCambiar: t => datos.descripcion = t }).render()
+                ]
+            }, vista: datos => {
+                return [
+                    $(`<label>${datos.descripcion}</label>`)
+                ]
+            } }).render()
         ]
     }
 

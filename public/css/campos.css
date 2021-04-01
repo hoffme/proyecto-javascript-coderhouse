@@ -105,6 +105,25 @@ input[type="checkbox"]:checked + .switch-slider:before {
     color: #999;
 }
 
+.campo.campo-arreglo .listado {
+    padding: 0.5rem;
+    color: #aaa;
+}
+.campo.campo-arreglo .controles {
+    display: flex;
+    flex-direction: row;
+}
+.campo.campo-arreglo .listado .fila {
+    display: flex;
+    flex-direction: row;
+}
+.campo.campo-arreglo .listado .fila .datos { flex: 1; }
+.campo.campo-arreglo .listado .fila .boton-editar {
+    background-color: transparent;
+    border: none;
+    color: #aaa;
+}
+
 .boton {
     display: flex;
     width: calc(100% - 1rem);

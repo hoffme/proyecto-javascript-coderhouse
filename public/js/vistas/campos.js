@@ -102,7 +102,6 @@ class Input extends Campo {
         if (this.alCambiar) {
             input.on("input", () => {
                 this.valor = input.val();
-                console.log(this.valor);
                 this.alCambiar(this.valor);
             });
         }
@@ -245,5 +244,135 @@ class Seleccion extends Campo {
         this.contenedor_listado.hide();
 
         return [ this.contenedor_valor, this.contenedor_listado, ];
+    }
+}
+
+class Arreglo extends Campo {
+    constructor(
+        {
+            titulo, 
+            valor, 
+            alCambiar,
+            buscador,
+            vista,
+            formulario,
+        },
+        propiedades
+    ) {
+        super(titulo, valor ? valor : [], alCambiar, 'campo-arreglo');
+
+        this.propiedades = propiedades;
+
+        this.buscador = buscador;
+        this.vista = vista;
+        this.formulario = formulario;
+
+
+        this.contenedor_listado = $(`<div class="contenedor-listado"></div>`);
+
+        if (this.buscador) {
+            const input_buscador = $(`<input class="input" placeholder="Buscar" type="text" />`);
+            input_buscador.on("input", () => this.buscar(input.val()));
+            this.contenedor_listado.append(input_buscador);
+        }
+
+        this.listado = $(`<div class="listado"></div>`);
+        this.contenedor_listado.append(this.listado);
+
+        const boton_nuevo = $(`<button class="boton boton-nuevo">Nuevo</button>`);
+        boton_nuevo.click(() => this.editar());
+        this.contenedor_listado.append(boton_nuevo);
+
+
+        this.contenedor_formulario = $(`<div class="contenedor-formulario"></div>`);
+    }
+
+    editar(datos) {
+        this.contenedor_formulario.empty();
+        
+        const datos_copia = { ...datos };
+
+        const indice = this.valor.indexOf(datos);
+        const formulario = this.formulario(datos_copia);
+
+        const controles = $('<div class="controles"></div>');
+
+        const boton_guardar = $(`<button class="boton boton-principal">Guardar</button>`);
+        boton_guardar.click(() => {
+            this.guardar(datos_copia, indice);
+            this.cerrar_formulario();
+        })
+
+        const boton_eliminar = $(`<button class="boton">Eliminar</button>`);
+        boton_eliminar.click(() => {
+            this.remover(indice);
+            this.cerrar_formulario();
+        })
+
+        const boton_cancelar = $(`<button class="boton">Cancelar</button>`);
+        boton_cancelar.click(() => {
+            this.cerrar_formulario();
+        })
+
+        controles.append(boton_guardar, boton_eliminar, boton_cancelar)
+        this.contenedor_formulario.append(formulario, controles);
+
+        this.contenedor_listado.hide();
+        this.contenedor_formulario.show();
+    }
+
+    cerrar_formulario() {
+        this.contenedor_formulario.hide();
+        this.contenedor_listado.show();
+        this.buscar();
+    }
+
+    guardar(datos_nuevos, indice) {
+        if (indice != 0 && (!indice || indice < 0 || indice >= this.valor.length)) this.valor.push(datos_nuevos);
+        else this.valor[indice] = datos_nuevos;
+
+        this.alCambiar(this.valor);
+    }
+
+    remover(indice) {
+        this.valor.splice(indice, 1);
+        this.alCambiar(this.valor);
+    }
+
+    async buscar(texto) {
+        const resultados = this.buscador ? 
+            await this.buscador(texto, this.valor) : 
+            this.valor;
+
+        this.listado.empty();
+
+        resultados.forEach(obj => {
+            const fila = $(`<div class="fila"></div>`);
+
+            const boton_editar = $(`<button class="boton-editar">Editar</button>`)
+            boton_editar.click(() => this.editar(obj));
+
+            const contenedor_vista = $(`<div class="datos"></div>`);
+            contenedor_vista.append(this.vista(obj));
+
+            fila.append(contenedor_vista, boton_editar);
+            
+            this.listado.append(fila);
+        });
+        if (resultados.length === 0) {
+            this.listado.append($('<label>No hay elementos</label>'));
+        }
+    }
+
+    contenido() {
+        this.contenedor_formulario.hide();
+        this.contenedor_listado.show();
+        
+        this.buscar();
+
+        return [
+            this.contenedor_listado, 
+            this.contenedor_formulario
+        ];
     }
 }
