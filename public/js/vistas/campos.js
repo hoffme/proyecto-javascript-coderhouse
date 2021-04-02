@@ -224,6 +224,8 @@ class Seleccion extends Campo {
     }
 
     contenido() {
+        this.valor = this.valor ? this.valor : [];
+
         this.contenedor_valor.click(e => {
             e.stopPropagation();
             if (this.contenedor_listado.is(":visible")) return;
@@ -251,11 +253,11 @@ class Arreglo extends Campo {
     constructor(
         {
             titulo, 
-            valor, 
+            valor,
             alCambiar,
-            buscador,
             vista,
-            formulario,
+            formulario_creacion = new Formulario({}),
+            formulario_edicion = new Formulario({})
         },
         propiedades
     ) {
@@ -263,60 +265,54 @@ class Arreglo extends Campo {
 
         this.propiedades = propiedades;
 
-        this.buscador = buscador;
         this.vista = vista;
-        this.formulario = formulario;
 
-
-        this.contenedor_listado = $(`<div class="contenedor-listado"></div>`);
-
-        if (this.buscador) {
-            const input_buscador = $(`<input class="input" placeholder="Buscar" type="text" />`);
-            input_buscador.on("input", () => this.buscar(input.val()));
-            this.contenedor_listado.append(input_buscador);
+        this.formulario_creacion = formulario_creacion;
+        this.formulario_creacion.alGuardar = datos => {
+            this.valor.push(datos);
+            this.cerrar_formulario();
         }
+        this.formulario_creacion.alCancelar = () => this.cerrar_formulario();
 
-        this.listado = $(`<div class="listado"></div>`);
-        this.contenedor_listado.append(this.listado);
-
-        const boton_nuevo = $(`<button class="boton boton-nuevo">Nuevo</button>`);
-        boton_nuevo.click(() => this.editar());
-        this.contenedor_listado.append(boton_nuevo);
-
+        this.formulario_edicion = formulario_edicion;
+        this.formulario_creacion.alCancelar = () => this.cerrar_formulario();
 
         this.contenedor_formulario = $(`<div class="contenedor-formulario"></div>`);
+
+
+        this.listado = $(`<div class="listado"></div>`);
+
+        const boton_nuevo = $(`<button class="boton boton-nuevo">Agregar</button>`);
+        boton_nuevo.click(() => {
+            this.formulario_creacion.datos = {};
+            
+            this.contenedor_formulario.empty();
+            this.contenedor_formulario.append(this.formulario_creacion.render());
+
+            this.contenedor_listado.hide();
+            this.contenedor_formulario.show();
+        });
+        
+        this.contenedor_listado = $(`<div class="contenedor-listado"></div>`);
+        this.contenedor_listado.append(this.listado, boton_nuevo);
     }
 
     editar(datos) {
-        this.contenedor_formulario.empty();
-        
-        const datos_copia = { ...datos };
-
         const indice = this.valor.indexOf(datos);
-        const formulario = this.formulario(datos_copia);
 
-        const controles = $('<div class="controles"></div>');
-
-        const boton_guardar = $(`<button class="boton boton-principal">Guardar</button>`);
-        boton_guardar.click(() => {
-            this.guardar(datos_copia, indice);
+        this.formulario_edicion.datos = { ...datos };
+        this.formulario_edicion.alGuardar = nuevos_datos => {
+            this.valor[indice] = nuevos_datos;
             this.cerrar_formulario();
-        })
-
-        const boton_eliminar = $(`<button class="boton">Eliminar</button>`);
-        boton_eliminar.click(() => {
-            this.remover(indice);
+        }
+        this.formulario_edicion.alEliminar = () => {
+            this.valor.splice(indice, 1);
             this.cerrar_formulario();
-        })
+        }
 
-        const boton_cancelar = $(`<button class="boton">Cancelar</button>`);
-        boton_cancelar.click(() => {
-            this.cerrar_formulario();
-        })
-
-        controles.append(boton_guardar, boton_eliminar, boton_cancelar)
-        this.contenedor_formulario.append(formulario, controles);
-
+        this.contenedor_formulario.empty();
+        this.contenedor_formulario.append(this.formulario_edicion.render());
+        
         this.contenedor_listado.hide();
         this.contenedor_formulario.show();
     }
@@ -324,29 +320,13 @@ class Arreglo extends Campo {
     cerrar_formulario() {
         this.contenedor_formulario.hide();
         this.contenedor_listado.show();
-        this.buscar();
+        this.actualizar_valores();
     }
 
-    guardar(datos_nuevos, indice) {
-        if (indice != 0 && (!indice || indice < 0 || indice >= this.valor.length)) this.valor.push(datos_nuevos);
-        else this.valor[indice] = datos_nuevos;
-
-        this.alCambiar(this.valor);
-    }
-
-    remover(indice) {
-        this.valor.splice(indice, 1);
-        this.alCambiar(this.valor);
-    }
-
-    async buscar(texto) {
-        const resultados = this.buscador ? 
-            await this.buscador(texto, this.valor) : 
-            this.valor;
-
+    async actualizar_valores() {
         this.listado.empty();
 
-        resultados.forEach(obj => {
+        this.valor.forEach(obj => {
             const fila = $(`<div class="fila"></div>`);
 
             const boton_editar = $(`<button class="boton-editar">Editar</button>`)
@@ -359,20 +339,67 @@ class Arreglo extends Campo {
             
             this.listado.append(fila);
         });
-        if (resultados.length === 0) {
+
+        if (this.valor.length === 0) {
             this.listado.append($('<label>No hay elementos</label>'));
         }
     }
 
     contenido() {
+        this.valor = this.valor ? this.valor : [];
+
         this.contenedor_formulario.hide();
         this.contenedor_listado.show();
         
-        this.buscar();
+        this.actualizar_valores();
 
         return [
             this.contenedor_listado, 
             this.contenedor_formulario
         ];
+    }
+}
+
+class Formulario {
+    constructor({ titulo, datos = {}, campos, alGuardar, alEliminar, alCancelar }) {
+        this.titulo = titulo;
+        this.datos = datos;
+        this.campos = campos;
+        this.alGuardar = alGuardar;
+        this.alEliminar = alEliminar;
+        this.alCancelar = alCancelar;
+    }
+
+    render() {
+        const ctn = $(`<div class="formulario"></div>`);
+
+        if (this.titulo) { ctn.prepend(`<h2>${this.titulo}</h2>`) }
+
+        Object.entries(this.campos).forEach(([clave, campo]) => {
+            campo.valor = this.datos[clave];
+            campo.alCambiar = dato => this.datos[clave] = dato;
+            
+            ctn.append(campo.render());
+        });
+
+        if (this.alGuardar) {
+            const boton_guardar = $(`<button class="boton boton-principal">Guardar</button>`);
+            boton_guardar.click(() => this.alGuardar(this.datos));
+            ctn.append(boton_guardar);
+        }
+
+        if (this.alEliminar) {
+            const boton_eliminar = $(`<button class="boton">Eliminar</button>`);
+            boton_eliminar.click(() => this.alEliminar(this.datos));
+            ctn.append(boton_eliminar);
+        }
+
+        if (this.alCancelar) {
+            const boton_cancelar = $(`<button class="boton">Cancelar</button>`);
+            boton_cancelar.click(() => this.alCancelar(this.datos));
+            ctn.append(boton_cancelar);
+        }
+
+        return ctn;
     }
 }

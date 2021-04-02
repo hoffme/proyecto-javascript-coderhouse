@@ -1,5 +1,6 @@
 .formulario {
     padding: 1rem;
+    overflow-y: auto;
 }
 .formulario h2 { color: var(--sobre-superficie-1); }
 .formulario .campo { background-color: var(--superficie-2) }

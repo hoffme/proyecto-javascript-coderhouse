@@ -1,5 +1,57 @@
 class PaginaRecetas extends Crud {
-    constructor(repoRecetas) { super('Recetas', repoRecetas) }
+    constructor(repoRecetas) {
+        super('Recetas', repoRecetas);
+
+        const campos_ingredientes = {
+            ingrediente: Seleccion.Consulta({
+                titulo: 'Ingrediente',
+                consulta: texto => {
+                    return {
+                        'mermelada-frutilla': 'Mermelada de Frutilla',
+                        'harina-000': 'Harina 000',
+                        'harina-0000': 'Harina 0000',
+                        'dulce-de-leche': 'Dulce de Leche',
+                        'crema-pastelera': 'Crema Pasteler',
+                        'hojaldre': 'Hojaldre',
+                    }
+                }
+            }),
+            cantidad: Input.Numero({ titulo: 'Cantidad' }),
+            unidad: Seleccion.Opciones({
+                titulo: 'Unidad',
+                opciones: {
+                    'masa-grs': 'Gramos',
+                    'vol-mlt': 'Mililitros'
+                }
+            })
+        }
+
+        const campos_tareas = {
+            nombre: Input.Texto({ titulo: 'Nombre' }),
+            descripcion: Input.Texto({ titulo: 'Descripcion' }),
+            tiempo: new Input({ titulo: 'Tiempo' }, { type: 'time' }),
+            ingredientes: new Arreglo({
+                titulo: 'Ingredientes',
+                valor: datos => [ $(`<label>${datos.ingrediente.nombre}</label>`) ],
+                formulario_creacion: new Formulario({ campos: campos_ingredientes }),
+                formulario_edicion: new Formulario({ campos: campos_ingredientes })
+            })
+        }
+
+        const campos = {
+            codigo: Input.Texto({ titulo: 'Codigo' }),
+            nombre: Input.Texto({ titulo: 'Nombre' }),
+            tareas: new Arreglo({
+                titulo: 'Tareas',
+                vista: datos => [ $(`<label>${datos.nombre}</label>`) ],
+                formulario_creacion: new Formulario({ campos: campos_tareas }),
+                formulario_edicion: new Formulario({ campos: campos_tareas })
+            })
+        };
+
+        this.formulario_creacion.campos = campos;
+        this.formulario_edicion.campos = campos;
+    }
 
     filtrador() {
         const cabecera = $('<div><div>');
@@ -50,28 +102,6 @@ class PaginaRecetas extends Crud {
         ctn.append(estadisticas);
 
         return ctn;
-    }
-
-    formularioCreacion(datos) { return this.formulario(datos) }
-
-    formularioEdicion(datos) { return this.formulario(datos) }
-
-    formulario(datos) {
-        const codigo = $('<input  />')
-
-        return [
-            Input.Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }).render(),
-            Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
-            new Arreglo({ titulo: 'Tareas', valor: datos.tareas, alCambiar: t => datos.tareas = t, formulario: (datos = {}) => {
-                return [
-                    Input.Texto({ titulo: 'Descripcion', valor: datos.descripcion, alCambiar: t => datos.descripcion = t }).render()
-                ]
-            }, vista: datos => {
-                return [
-                    $(`<label>${datos.descripcion}</label>`)
-                ]
-            } }).render()
-        ]
     }
 
     mostrarEstadisticas(receta) {
