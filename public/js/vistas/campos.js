@@ -250,19 +250,7 @@ class Arreglo extends Campo {
 
         this.listado = $(`<div class="listado"></div>`);
 
-        const boton_nuevo = $(`<button class="boton boton-nuevo">Agregar</button>`);
-        boton_nuevo.click(() => {
-            this.formulario_creacion.datos = {};
-            
-            this.contenedor_formulario.empty();
-            this.contenedor_formulario.append(this.formulario_creacion.render());
-
-            this.contenedor_listado.hide();
-            this.contenedor_formulario.show();
-        });
-        
         this.contenedor_listado = $(`<div class="contenedor-listado"></div>`);
-        this.contenedor_listado.append(this.listado, boton_nuevo);
     }
 
     editar(datos) {
@@ -317,6 +305,20 @@ class Arreglo extends Campo {
 
     contenido() {
         this.valor = this.valor ? this.valor : [];
+
+        const boton_nuevo = $(`<button class="boton boton-nuevo">Agregar</button>`);
+        boton_nuevo.click(() => {
+            this.formulario_creacion.datos = {};
+            
+            this.contenedor_formulario.empty();
+            this.contenedor_formulario.append(this.formulario_creacion.render());
+
+            this.contenedor_listado.hide();
+            this.contenedor_formulario.show();
+        });
+
+        this.contenedor_listado.empty();
+        this.contenedor_listado.append(this.listado, boton_nuevo);
 
         this.contenedor_formulario.hide();
         this.contenedor_listado.show();
