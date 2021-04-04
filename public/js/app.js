@@ -2,7 +2,7 @@ class App {
     constructor(idRaiz) {
         this.raiz = $(`#${idRaiz}`);
 
-        this.api_uri = 'http://localhost:3000/api';
+        this.api_uri = `${window.location.origin}/api`;
 
         this.repositorios = {
             herramientas: new Repositorio(this.api_uri, 'herramientas'),
