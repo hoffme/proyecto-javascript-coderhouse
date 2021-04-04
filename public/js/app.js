@@ -16,10 +16,10 @@ class App {
         ])
 
         this.paginas = [
-            new PaginaCalculadora(this.repositorios.recetas),
             new PaginaRecetas(this.repositorios.recetas, this.repositorios.ingredientes, this.repositorios.herramientas),
             new PaginaMateriaPrima(this.repositorios.materia_prima),
             new PaginaHerramientas(this.repositorios.herramientas),
+            new PaginaCalculadora(this.repositorios.recetas),
         ]
 
         this.navegacion = new Navegacion(this.paginas.map((pagina, indice) => {

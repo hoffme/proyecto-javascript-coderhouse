@@ -5,10 +5,14 @@ class PaginaCalculadora extends Pagina {
         this.repoRecetas = repoRecetas;
 
         this.contenido = $(`<div class="contenido-calculadora"></div>`);
+
+        this.calculadora = new CalculadoraRecetas({});
     }
 
     _contenido() {
-        return [
+        const contenedor = $(`<div class="ancho"></div>`);
+
+        contenedor.append(
             new Seleccion({
                 titulo: 'Seleccione una Receta',
                 alCambiar: receta => this.seleccionarReceta(receta),
@@ -18,10 +22,15 @@ class PaginaCalculadora extends Pagina {
                 metaValor: receta => { return { titulo: receta.nombre } }
             }).render(),
             this.contenido
-        ];
+        )
+
+        return contenedor;
     }
 
     seleccionarReceta(receta) {
         this.contenido.empty();
+        this.calculadora = new CalculadoraRecetas(receta);
+
+        
     }
 }
