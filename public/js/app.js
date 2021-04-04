@@ -10,8 +10,13 @@ class App {
             recetas: new Repositorio(this.api_uri, 'recetas')
         }
 
+        this.repositorios.ingredientes = new RepositorioWrapper([
+            this.repositorios.recetas,
+            this.repositorios.materia_prima
+        ])
+
         this.paginas = [
-            new PaginaRecetas(this.repositorios.recetas, this.repositorios.materia_prima, this.repositorios.herramientas),
+            new PaginaRecetas(this.repositorios.recetas, this.repositorios.ingredientes, this.repositorios.herramientas),
             new PaginaMateriaPrima(this.repositorios.materia_prima),
             new PaginaHerramientas(this.repositorios.herramientas),
         ]

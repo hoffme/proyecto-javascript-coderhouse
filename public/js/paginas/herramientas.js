@@ -6,10 +6,10 @@ class PaginaHerramientas extends Crud {
             nombre: Input.Texto({ titulo: 'Nombre' }),
             costo: Input.Numero({ titulo: 'Costo ($ / hs)' }),
             capacidad: Input.Texto({ titulo: 'Capacidad' }),
-            unidad: Seleccion.Opciones({ titulo: 'Medida', opciones: {
-                'grs': 'Gramos',
-                'mlt' : 'Mililitros'
-            }})
+            unidad: Seleccion.Opciones({ titulo: 'Medida', opciones: [
+                { titulo: 'Gramos', valor: 'grs' },
+                { titulo: 'Mililitros', valor: 'mls' }
+            ]})
         };
 
         this.formulario_creacion.campos = campos;

@@ -6,10 +6,10 @@ class PaginaMateriaPrima extends Crud {
             marca: Input.Texto({ titulo: 'Marca' }),
             precio: Input.Numero({ titulo: 'Precio' }),
             cantidad: Input.Numero({ titulo: 'Cantidad' }),
-            medida: Seleccion.Opciones({ titulo: 'Medida', opciones: {
-                'grs': 'Gramos',
-                'mlt' : 'Mililitros'
-            }})
+            medida: Seleccion.Opciones({ titulo: 'Medida', opciones: [
+                { titulo: 'Gramos', valor: 'grs' },
+                { titulo: 'Mililitros', valor: 'mls' }
+            ]})
         }
 
         const campos = {
@@ -66,21 +66,29 @@ class PaginaMateriaPrima extends Crud {
 
     listadoFila(obj) {
         const costo = (variacion) => variacion.precio / variacion.cantidad;
-        const ordenadoPorPrecios = [...obj.variaciones].sort((a, b) => costo(a) < costo(b));
+        const ordenadoPorPrecios = obj.variaciones ?
+            [...obj.variaciones].sort((a, b) => costo(a) < costo(b)) :
+            [];
 
         const ctn = $(`<div class="listado-fila">
             <label class="nombre">${obj.nombre}</label>
         </div>`);
 
+        let precio_max = '0';
+        let precio_min = '0';
+
         if (ordenadoPorPrecios.length > 0) {
             const var_max = ordenadoPorPrecios[ordenadoPorPrecios.length - 1];
             const var_min = ordenadoPorPrecios[0];
 
-            ctn.append(`
-                <label class="precio-menor">${var_min.precio / var_min.cantidad} $/${var_min.medida}</label>
-                <label class="precio-menor">${var_max.precio / var_max.cantidad} $/${var_max.medida}</label>
-            `);
+            precio_max = `${var_max.precio / var_max.cantidad} $/${var_max.medida}`;
+            precio_min = `${var_min.precio / var_min.cantidad} $/${var_min.medida}`;
         }
+
+        ctn.append(`
+            <label class="precio-min">${precio_min}</label>
+            <label class="precio-max">${precio_max}</label>
+        `);
 
         const editar = $('<button>Editar</button>');
         editar.click(() => this.editar(obj));
