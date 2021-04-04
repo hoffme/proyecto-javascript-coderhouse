@@ -7,10 +7,7 @@ const port = process.env.PORT || 3000;
 const debug = false;
 
 const repoitorios = {
-    costos: new repositorio.Repositorio(),
-    empleados: new repositorio.Repositorio(),
     herramientas: new repositorio.Repositorio(),
-    provedores: new repositorio.Repositorio(),
     materia_prima: new repositorio.Repositorio(),
     recetas: new repositorio.Repositorio()
 };

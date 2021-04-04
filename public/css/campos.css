@@ -89,6 +89,7 @@ input[type="checkbox"]:checked + .switch-slider:before {
 }
 .campo.campo-seleccion .contenedor-listado {
     position: absolute;
+    z-index: 1;
     background-color: var(--superficie-2);
     border-radius: 5px;
     box-shadow: 1px 1px 3px var(--sombra-superficie-2);
@@ -118,7 +119,12 @@ input[type="checkbox"]:checked + .switch-slider:before {
     display: flex;
     flex-direction: row;
 }
-.campo.campo-arreglo .listado .fila .datos { flex: 1; }
+.campo.campo-arreglo .listado .fila .datos {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+.campo.campo-arreglo .listado .fila .datos > * { flex: 1; }
 .campo.campo-arreglo .listado .fila .boton-editar {
     background-color: transparent;
     border: none;

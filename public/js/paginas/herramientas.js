@@ -1,5 +1,20 @@
 class PaginaHerramientas extends Crud {
-    constructor(repoHerramientas) { super('Herramientas', repoHerramientas) }
+    constructor(repoHerramientas) {
+        super('Herramientas', repoHerramientas);
+
+        const campos = {
+            nombre: Input.Texto({ titulo: 'Nombre' }),
+            costo: Input.Numero({ titulo: 'Costo ($ / hs)' }),
+            capacidad: Input.Texto({ titulo: 'Capacidad' }),
+            unidad: Seleccion.Opciones({ titulo: 'Medida', opciones: {
+                'grs': 'Gramos',
+                'mlt' : 'Mililitros'
+            }})
+        };
+
+        this.formulario_creacion.campos = campos;
+        this.formulario_edicion.campos = campos;
+    }
 
     filtrador() {
         const cabecera = $('<div><div>');
@@ -28,18 +43,18 @@ class PaginaHerramientas extends Crud {
 
     listadoCabecera() {
         return $(`<div>
-            <label class="codigo">Codigo</label>
             <label class="nombre">Nombre</label>
-            <label class="consumo">Consumo</label>
+            <label class="costo">Costo ($ / hs)</label>
+            <label class="capacidad">Capacidad</label>
             <label class="editar"></label>
         </div>`);
     }
 
     listadoFila(obj) {
         const ctn = $(`<div class="listado-fila">
-            <label class="codigo">${obj.codigo}</label>
             <label class="nombre">${obj.nombre}</label>
-            <label class="consumo">$ ${obj.consumo}</label>
+            <label class="costo">${obj.costo}</label>
+            <label class="costo">${obj.capacidad} ${obj.unidad}</label>
         </div>`);
 
         const editar = $('<button>Editar</button>');
@@ -47,24 +62,5 @@ class PaginaHerramientas extends Crud {
         ctn.append(editar);
 
         return ctn;
-    }
-
-    formularioCreacion(datos) { return this.formulario(datos) }
-
-    formularioEdicion(datos) { return this.formulario(datos) }
-
-    formulario(datos) {
-        return [
-            Input.Texto({ titulo: 'Codigo', valor: datos.codigo, alCambiar: t => datos.codigo = t }).render(),
-            Input.Texto({ titulo: 'Nombre', valor: datos.nombre, alCambiar: t => datos.nombre = t }).render(),
-            Input.Numero({ titulo: 'Consumo', placeholder: 'Watts/Hora', valor: datos.consumo, alCambiar: t => datos.consumo = t }).render(),
-            Input.Numero({ titulo: 'Capacidad', valor: datos.capacidad, alCambiar: t => datos.capacidad = t }).render(),
-            Seleccion.Opciones({ titulo: 'Unidad de Capacidad', valor: datos.unidad, alCambiar: t => datos.unidad = t, opciones: [
-                { titulo: 'Masa (gramos)', valor: 'masa' },
-                { titulo: 'Volumen (mililitros)', valor: 'volumen' },
-                { titulo: 'Latas (Medianas)', valor: 'lat-med' },
-                { titulo: 'Latas (Grandes)', valor: 'lat-gra' }
-            ]}).render(),        
-        ]
     }
 }

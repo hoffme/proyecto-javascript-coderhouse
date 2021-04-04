@@ -115,64 +115,39 @@ class Input extends Campo {
 }
 
 class Seleccion extends Campo {
-    static async _buscadorOpciones(opciones, texto) {
-        if (!texto || texto.length === 0) return opciones;
+    static Opciones({ titulo, valor, alCambiar, opciones }) {
+        return new Seleccion(
+            {
+                titulo,
+                valor: valor,
+                alCambiar,
+                buscador: texto => {
+                    let resultado = [];
 
-        return Object.entries(opciones).reduce((resultado, [id, titulo]) => {
-            if (titulo.toLowerCase().includes(texto.toLowerCase())) {
-                resultado[id] = titulo;
+                    if (!texto || texto.length === 0) resultado = opciones;
+                    else resultado = opciones.find(obj => {
+                        return obj.titulo.toLowerCase().includes(texto.toLowerCase());
+                    })
+
+                    return resultado.map(obj => obj.valor);
+                },
+                metaValor: valor => {
+                    const opcion = opciones.find(obj => valor === obj.valor);
+                    if (!opcion) return {}
+                    return { titulo: opcion.titulo }
+                }
             }
-            return resultado;
-        }, {});
-    }
-
-    static Consulta({ titulo, valor, alCambiar, multiple = false, consulta, desactivado }) {
-        return new Seleccion(
-            {
-                titulo,
-                valor: valor ? valor : [],
-                alCambiar,
-                multiple,
-                buscador: consulta
-            }, { desactivado }
         );
     }
 
-    static Opciones({ titulo, valor, alCambiar, multiple = false, opciones, desactivado }) {
-        return new Seleccion(
-            {
-                titulo,
-                valor: valor ? valor : [],
-                alCambiar,
-                multiple,
-                buscador: texto => Seleccion._buscadorOpciones(opciones, texto)
-            }, { desactivado }
-        );
-    }
-
-    constructor(
-        {
-            titulo, 
-            valor, 
-            alCambiar,
-            multiple,
-            buscador
-        },
-        propiedades
-    ) {
+    constructor({titulo, valor, alCambiar, buscador, metaValor}) {
         super(titulo, valor, alCambiar, 'campo-seleccion');
 
-        this.propiedades = propiedades;
-        this.multiple = multiple;
         this.buscador = buscador;
+        this.metaValor = metaValor;
 
         this.contenedor_valor = $(`<label class="valor">-<label>`);
-        this.contenedor_valor.html(
-            this.valor.length === 0 ? 
-                '-' :
-                this.valor.join(' - ')
-        )
-
+        this.contenedor_valor.html('-')
 
         this.contenedor_listado = $(`<div class="contenedor-listado"></div>`);
 
@@ -184,48 +159,39 @@ class Seleccion extends Campo {
         this.contenedor_listado.append(input, this.listado);
     }
 
+    checkBoxView(valor) {
+        const meta = this.metaValor(valor);
+
+        const contenedor = $(`<label>${meta.titulo}</label>`);
+
+        const checked = this.valor === valor;
+
+        const checkbox = $(`<input type="checkbox"/>`);
+        checkbox.prop('checked', checked);
+        checkbox.change(() => {
+            if (checkbox.prop('checked')) {
+                this.listado.find(':checkbox:checked').prop('checked', false);
+                checkbox.prop('checked', true);
+            }
+
+            this.valor = checkbox.is(':checked') ? valor : null;
+            
+            this.contenedor_valor.html(this.valor ? meta.titulo : '-');
+            if (this.alCambiar) this.alCambiar(this.valor);
+        });
+
+        contenedor.prepend(checkbox);
+
+        return contenedor;
+    }
+
     async buscar(texto) {
         const resultados = await this.buscador(texto);
-
         this.listado.empty();
-        
-        const nombreGrupo = `grupo-seleccion-${Math.floor(Math.random() * 1000)}`;
-
-        Object.entries(resultados).forEach(([id, titulo]) => {
-            const contenedor = $(`<label>${titulo}</label>`);
-
-            const checked = this.valor.indexOf(id) > -1;
-
-            const checkbox = $(`<input type="checkbox" id="${nombreGrupo}-${id}" name="${nombreGrupo}" />`);
-            checkbox.prop('checked', checked);
-            checkbox.change(() => {
-                if (checkbox.prop('checked')) {
-                    if (this.multiple) this.valor.push(id);
-                    else this.valor = [id];
-                } else this.valor.splice(this.valor.indexOf(id), 1);
-
-                $(`input:checkbox[name='${nombreGrupo}']`).prop('checked', false);
-                this.valor.forEach(id => {
-                    $(`input:checkbox[id='${nombreGrupo}-${id}']`).prop('checked', true);
-                })
-
-                if (this.alCambiar) this.alCambiar(this.valor);
-                this.contenedor_valor.html(
-                    this.valor.length === 0 ? 
-                        '-' :
-                        this.valor.join(' - ')
-                )
-            });
-
-            contenedor.prepend(checkbox);
-
-            this.listado.append(contenedor);
-        });
+        this.listado.append(resultados.map(obj => this.checkBoxView(obj)));
     }
 
     contenido() {
-        this.valor = this.valor ? this.valor : [];
-
         this.contenedor_valor.click(e => {
             e.stopPropagation();
             if (this.contenedor_listado.is(":visible")) return;
@@ -239,7 +205,8 @@ class Seleccion extends Campo {
             }
 
             window.addEventListener('click', cerrar_listado);
-        })
+        });
+        this.contenedor_valor.html(this.valor ? this.metaValor(this.valor).titulo : '-');
 
         this.contenedor_listado.click(e => e.stopPropagation());
 
@@ -271,11 +238,12 @@ class Arreglo extends Campo {
         this.formulario_creacion.alGuardar = datos => {
             this.valor.push(datos);
             this.cerrar_formulario();
+            if (this.alCambiar) this.alCambiar(this.valor);
         }
         this.formulario_creacion.alCancelar = () => this.cerrar_formulario();
 
         this.formulario_edicion = formulario_edicion;
-        this.formulario_creacion.alCancelar = () => this.cerrar_formulario();
+        this.formulario_edicion.alCancelar = () => this.cerrar_formulario();
 
         this.contenedor_formulario = $(`<div class="contenedor-formulario"></div>`);
 
@@ -304,10 +272,12 @@ class Arreglo extends Campo {
         this.formulario_edicion.alGuardar = nuevos_datos => {
             this.valor[indice] = nuevos_datos;
             this.cerrar_formulario();
+            if (this.alCambiar) this.alCambiar(this.valor);
         }
         this.formulario_edicion.alEliminar = () => {
             this.valor.splice(indice, 1);
             this.cerrar_formulario();
+            if (this.alCambiar) this.alCambiar(this.valor);
         }
 
         this.contenedor_formulario.empty();
