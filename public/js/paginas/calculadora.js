@@ -108,7 +108,7 @@ class PaginaCalculadora extends Pagina {
 
         this.mostrarResultados(resultadosContenedor, {});
 
-        return new CampoContenedor('Calculadora de Costo', [
+        return new CampoContenedor('Calculadora de Costo Materia Prima', [
             resultadosContenedor,
             contenedorFormulario
         ]).render();
