@@ -13,7 +13,7 @@ const repoitorios = {
     recetas: new repositorio.Repositorio()
 };
 
-//cargador.cargador(repoitorios);
+cargador.cargador(repoitorios);
 
 const log = (texto, salto = true) => {
     if (salto) console.log(texto);
