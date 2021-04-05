@@ -2,4 +2,4 @@
 
 ## Preview
 
-preview de la app actualizada en :point_right: [netlify](https://recetas-coderhouse.herokuapp.com/)
+preview de la app actualizada en :point_right: [heroku](https://recetas-coderhouse.herokuapp.com/)
