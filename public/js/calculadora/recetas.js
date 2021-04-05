@@ -76,7 +76,9 @@ class CalculadoraRecetas {
     costoMenor() {
         const costoMenor = (ingrediente) => {
             if (!ingrediente.ingrediente.pasos) {
-                const preciosOrdenados = ingrediente.ingrediente.variaciones.sort((a, b) => a.precio - b.precio);
+                const preciosOrdenados = ingrediente.ingrediente.variaciones.sort((a, b) => {
+                    return (a.precio / a.cantidad) - (b.precio / b.cantidad)
+                });
 
                 if (preciosOrdenados.length === 0) return 0;
 
@@ -100,7 +102,9 @@ class CalculadoraRecetas {
     costoMayor() {
         const costoMayor = (ingrediente) => {
             if (!ingrediente.ingrediente.pasos) {
-                const preciosOrdenados = ingrediente.ingrediente.variaciones.sort((a, b) => b.precio - a.precio);
+                const preciosOrdenados = ingrediente.ingrediente.variaciones.sort((a, b) => {
+                    return (b.precio / b.cantidad) - (a.precio / a.cantidad)
+                });
 
                 if (preciosOrdenados.length === 0) return 0;
 
