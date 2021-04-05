@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require ('cors'); 
 const repositorio = require('./repositorio');
+const cargador = require('./cargador');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -11,6 +12,8 @@ const repoitorios = {
     materia_prima: new repositorio.Repositorio(),
     recetas: new repositorio.Repositorio()
 };
+
+cargador.cargador(repoitorios);
 
 const log = (texto, salto = true) => {
     if (salto) console.log(texto);
