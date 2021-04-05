@@ -89,14 +89,17 @@ class PaginaRecetas extends Crud {
     listadoCabecera() {
         return $(`<div>
             <label class="nombre">Nombre</label>
+            <label class="pasos">Pasos</label>
+            <label class="rendimiento">Rendimiento</label>
             <label class="editar"></label>
-            <label class="estadisticas"></label>
         </div>`);
     }
 
     listadoFila(obj) {
         const ctn = $(`<div class="listado-fila">
             <label class="nombre">${obj.nombre}</label>
+            <label class="pasos">${obj.pasos.length}</label>
+            <label class="rendimiento">${obj.rendimiento}</label>
         </div>`);
 
         const editar = $('<button>Editar</button>');
