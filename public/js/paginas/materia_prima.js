@@ -67,7 +67,7 @@ class PaginaMateriaPrima extends Crud {
     listadoFila(obj) {
         const costo = (variacion) => variacion.precio / variacion.cantidad;
         const ordenadoPorPrecios = obj.variaciones ?
-            [...obj.variaciones].sort((a, b) => costo(a) < costo(b)) :
+            [...obj.variaciones].sort((a, b) => costo(a) - costo(b)) :
             [];
 
         const ctn = $(`<div class="listado-fila">
