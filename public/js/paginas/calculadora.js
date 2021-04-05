@@ -13,6 +13,11 @@ function sumarTiempos(tiempo_a, tiempo_b) {
     return `${min < 10 ? '0' : ''}${min}:${seg < 10 ? '0' : ''}${seg}`
 }
 
+const tiempoAHoras = (tiempo) => {
+    const [minutos, segundos] = tiempo.split(':');
+    return (parseInt(minutos) / 60) + (parseInt(segundos) / 3600);
+}
+
 class PaginaCalculadora extends Pagina {
     constructor(repoRecetas) {
         super('Calculadora');
@@ -48,7 +53,9 @@ class PaginaCalculadora extends Pagina {
 
         this.contenido.append(
             this.info(),
-            this.personalizacion(),
+            this.costoMateriaPrima(),
+            this.costoServicios(),
+            this.costoManoDeObra()
         )
     }
 
@@ -79,8 +86,16 @@ class PaginaCalculadora extends Pagina {
         return ctn;
     }
 
-    personalizacion() {
-        const resultadosContenedor = $(`<div class="resultados"></div>`);
+    costoMateriaPrima() {
+        const resultadosContenedor = $(`<div class="resultados">
+            <h3>Costo de Materia Prima: -</h3>
+        </div>`);
+
+        const mostrarResultados = (datos) => {
+            resultadosContenedor.empty();
+            const costo = this.calculadora.costoMateriaPrima(datos);
+            resultadosContenedor.append(`<h3>Costo de Materia Prima: $${costo}</h3>`);
+        }
 
         const camposVariaciones = Object.values(this.calculadora.ingredientes()).reduce((campos, ingrediente) => {
             let variaciones = [];
@@ -100,13 +115,11 @@ class PaginaCalculadora extends Pagina {
 
         const formulario = new Formulario({
             campos: camposVariaciones,
-            alGuardar: (datos) => this.mostrarResultados(resultadosContenedor, datos)
+            alGuardar: (datos) => mostrarResultados(datos)
         })
 
         const contenedorFormulario = $(`<div class="formulario-calculadora-costos"></div>`);
         contenedorFormulario.append(formulario.render());
-
-        this.mostrarResultados(resultadosContenedor, {});
 
         return new CampoContenedor('Calculadora de Costo Materia Prima', [
             resultadosContenedor,
@@ -114,9 +127,70 @@ class PaginaCalculadora extends Pagina {
         ]).render();
     }
 
-    mostrarResultados(ctn, datos) {
-        ctn.empty();
-        const costo = this.calculadora.costoConVariaciones(datos);
-        ctn.append(`<h3>Costo de Materia Prima: $${costo}</h3>`);
+    costoServicios() {
+        const resultadosContenedor = $(`<div class="resultados">
+            <h3>Costo de Electricidad: -</h3>
+            <h3>Costo de Gas: -</h3>
+        </div>`);
+
+        const mostrarResultados = (precio) => {
+            resultadosContenedor.empty();
+
+            const { electricidad, gas } = this.calculadora.consumoHerramientas();
+
+            resultadosContenedor.append(`
+                <h3>Costo de Electricidad: $${electricidad * (precio.electricidad ? precio.electricidad : 0)}</h3>
+                <h3>Costo de Gas: $${gas * (precio.gas ? precio.gas : 0)}</h3>
+            `);
+        }
+
+        const formulario = new Formulario({
+            campos: {
+                electricidad: Input.Texto({ titulo: 'Electricidad', placeholder: '$/kw' }),
+                gas: Input.Texto({ titulo: 'Gas', placeholder: '$/cm3' }),
+            },
+            alGuardar: (datos) => mostrarResultados(datos)
+        })
+
+        const contenedorFormulario = $(`<div class="formulario-calculadora-costos"></div>`);
+        contenedorFormulario.append(formulario.render());
+
+        return new CampoContenedor('Calculadora de Costo Servicios', [
+            resultadosContenedor,
+            contenedorFormulario
+        ]).render();
+    }
+
+    costoManoDeObra() {
+        const resultadosContenedor = $(`<div class="resultados">
+            <h3>Costo de Mano de obra: -</h3>
+        </div>`);
+
+        const mostrarResultados = (sueldoHora) => {
+            resultadosContenedor.empty();
+
+            const tiempoTrabajo = this.calculadora.pasos().reduce((total, paso) => {
+                return paso.tiempoTrabajo ? sumarTiempos(total, paso.tiempoTrabajo) : total;
+            }, '00:00');
+
+            resultadosContenedor.append(`
+                <h3>Costo de Mano de obra: $${tiempoAHoras(tiempoTrabajo) * (sueldoHora ? sueldoHora : 0)}</h3>
+            `);
+        }
+
+        const formulario = new Formulario({
+            campos: {
+                sueldo: Input.Texto({ titulo: 'Sueldo Por Hora', placeholder: '$/hs' }),
+            },
+            alGuardar: (datos) => mostrarResultados(datos.sueldo)
+        })
+
+        const contenedorFormulario = $(`<div class="formulario-calculadora-costos"></div>`);
+        contenedorFormulario.append(formulario.render());
+
+        return new CampoContenedor('Calculadora de Costo Mano de Obra', [
+            resultadosContenedor,
+            contenedorFormulario
+        ]).render();
     }
 }

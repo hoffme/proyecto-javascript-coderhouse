@@ -4,11 +4,11 @@ class PaginaHerramientas extends Crud {
 
         const campos = {
             nombre: Input.Texto({ titulo: 'Nombre' }),
-            costo: Input.Numero({ titulo: 'Costo ($ / hs)' }),
-            capacidad: Input.Texto({ titulo: 'Capacidad' }),
-            unidad: Seleccion.Opciones({ titulo: 'Medida', opciones: [
-                { titulo: 'Gramos', valor: 'grs' },
-                { titulo: 'Mililitros', valor: 'mls' }
+            consumo: Input.Numero({ titulo: 'Consumo' }),
+            unidad: Seleccion.Opciones({ titulo: 'Unidad', opciones: [
+                { titulo: 'Sin Consumo', valor: '-' },
+                { titulo: 'Gas (cm3/hs)', valor: 'cm3/hs' },
+                { titulo: 'Electricidad (Watt/hs)', valor: 'watt/hs' }
             ]})
         };
 
@@ -44,8 +44,7 @@ class PaginaHerramientas extends Crud {
     listadoCabecera() {
         return $(`<div>
             <label class="nombre">Nombre</label>
-            <label class="costo">Costo ($ / hs)</label>
-            <label class="capacidad">Capacidad</label>
+            <label class="consumo">Consumo</label>
             <label class="editar"></label>
         </div>`);
     }
@@ -53,8 +52,7 @@ class PaginaHerramientas extends Crud {
     listadoFila(obj) {
         const ctn = $(`<div class="listado-fila">
             <label class="nombre">${obj.nombre}</label>
-            <label class="costo">${obj.costo}</label>
-            <label class="costo">${obj.capacidad} ${obj.unidad}</label>
+            <label class="consumo">${obj.consumo} ${obj.unidad}</label>
         </div>`);
 
         const editar = $('<button>Editar</button>');

@@ -121,7 +121,7 @@ class CalculadoraRecetas {
         return costoMayor({ ingrediente: this.receta });
     }
 
-    costoConVariaciones(variaciones) {
+    costoMateriaPrima(variaciones) {
         const calcularCosto = (ingrediente) => {
             if (!ingrediente.ingrediente.pasos) {
                 if (ingrediente.ingrediente.variaciones.length === 0) return 0;
@@ -145,5 +145,43 @@ class CalculadoraRecetas {
         }
 
         return calcularCosto({ ingrediente: this.receta });
+    }
+
+    consumoHerramientas() {
+        const tiempoAHoras = (tiempo) => {
+            const [minutos, segundos] = tiempo.split(':');
+            return (parseInt(minutos) / 60) + (parseInt(segundos) / 3600);
+        }
+
+        const calcularCosto = (receta) => {
+            return receta.pasos.reduce((costo, paso) => {
+                if (paso.ingredientes) {
+                    paso.ingredientes.forEach(ingrediente => {
+                        if (!ingrediente.ingrediente.pasos) return; 
+
+                        const costoExtra = calcularCosto(ingrediente.ingrediente);
+
+                        costo.electricidad += costoExtra.electricidad;
+                        costo.gas += costoExtra.gas;
+                    });
+                }
+
+                if (paso.herramientas) {
+                    paso.herramientas.forEach(herramienta => {
+                        const consumo = parseInt(herramienta.herramienta.consumo);
+
+                        if (herramienta.herramienta.unidad === 'watt/hs') {
+                            costo.electricidad += consumo * tiempoAHoras(herramienta.tiempo);
+                        } else if (herramienta.herramienta.unidad === 'cm3/hs') {
+                            costo.gas += consumo * tiempoAHoras(herramienta.tiempo);
+                        }
+                    });
+                }
+
+                return costo;
+            }, { electricidad: 0, gas: 0 });
+        }
+
+        return calcularCosto(this.receta);
     }
 }
