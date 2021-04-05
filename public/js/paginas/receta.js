@@ -31,6 +31,7 @@ class PaginaRecetas extends Crud {
             nombre: Input.Texto({ titulo: 'Nombre' }),
             descripcion: Input.Texto({ titulo: 'Descripcion' }),
             tiempo: new Input({ titulo: 'Tiempo' }, { type: 'time' }),
+            tiempoTrabajo: new Input({ titulo: 'Tiempo Trabajo' }, { type: 'time' }),
             ingredientes: new Arreglo({
                 titulo: 'Ingredientes',
                 vista: datos => [ $(`<label>${datos.ingrediente ? datos.ingrediente.nombre : '-'}</label>`) ],
@@ -47,6 +48,7 @@ class PaginaRecetas extends Crud {
 
         const campos = {
             nombre: Input.Texto({ titulo: 'Nombre' }),
+            rendimiento: Input.Numero({ titulo: 'Rendimiento' }),
             pasos: new Arreglo({
                 titulo: 'Pasos',
                 vista: datos => [ $(`<label>${datos.nombre}</label>`) ],

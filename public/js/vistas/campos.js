@@ -21,6 +21,16 @@ class Campo {
     }
 }
 
+class CampoInformacion extends Campo {
+    constructor(titulo, datos) { super(titulo, datos) }
+    contenido() {
+        return this.valor.map(datos => $(`<div>
+            <b>${datos.titulo}</b>
+            <label>${datos.valor}</label>
+        </div>`));
+    }
+}
+
 class Input extends Campo {
     static Texto({ titulo, valor, alCambiar, placeholder, disabled }) {
         return new Input({
