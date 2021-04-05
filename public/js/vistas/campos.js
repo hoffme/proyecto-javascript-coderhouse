@@ -24,10 +24,23 @@ class Campo {
 class CampoInformacion extends Campo {
     constructor(titulo, datos) { super(titulo, datos) }
     contenido() {
-        return this.valor.map(datos => $(`<div>
-            <b>${datos.titulo}</b>
-            <label>${datos.valor}</label>
-        </div>`));
+        const ctn = $('<div class="datos"></div>');
+        
+        ctn.append(...(this.valor.map(datos => $(`<div>
+            <label>${datos.titulo}</label>
+            <b>${datos.valor}</b>
+        </div>`))));
+
+        return ctn;
+    }
+}
+
+class CampoContenedor extends Campo {
+    constructor(titulo, html) { super(titulo, html) }
+    contenido() {
+        const ctn = $('<div class="contenido"></div>');
+        ctn.append(this.valor);
+        return ctn;
     }
 }
 
@@ -185,9 +198,11 @@ class Seleccion extends Campo {
             }
 
             this.valor = checkbox.is(':checked') ? valor : null;
-            
-            this.contenedor_valor.html(this.valor ? meta.titulo : '-');
+
+            this.contenedor_valor.html((this.valor || this.valor === 0) ? meta.titulo : '-');
             if (this.alCambiar) this.alCambiar(this.valor);
+
+            this.cerrarPopup();
         });
 
         contenedor.prepend(checkbox);
@@ -201,6 +216,10 @@ class Seleccion extends Campo {
         this.listado.append(resultados.map(obj => this.checkBoxView(obj)));
     }
 
+    cerrarPopup() {
+        this.contenedor_listado.hide();
+    }
+
     contenido() {
         this.contenedor_valor.click(e => {
             e.stopPropagation();
@@ -210,7 +229,7 @@ class Seleccion extends Campo {
             this.buscar();
 
             const cerrar_listado = () => {
-                this.contenedor_listado.hide();
+                this.cerrarPopup();
                 window.removeEventListener('click', cerrar_listado);
             }
 
@@ -343,13 +362,14 @@ class Arreglo extends Campo {
 }
 
 class Formulario {
-    constructor({ titulo, datos = {}, campos, alGuardar, alEliminar, alCancelar }) {
+    constructor({ titulo, datos = {}, campos, alGuardar, alEliminar, alCancelar, alCambiar }) {
         this.titulo = titulo;
         this.datos = datos;
         this.campos = campos;
         this.alGuardar = alGuardar;
         this.alEliminar = alEliminar;
         this.alCancelar = alCancelar;
+        this.alCambiar = alCambiar;
     }
 
     render() {
@@ -359,7 +379,10 @@ class Formulario {
 
         Object.entries(this.campos).forEach(([clave, campo]) => {
             campo.valor = this.datos[clave];
-            campo.alCambiar = dato => this.datos[clave] = dato;
+            campo.alCambiar = dato => {
+                this.datos[clave] = dato;
+                if (this.alCambiar) this.alCambiar(this.datos);
+            }
             
             ctn.append(campo.render());
         });

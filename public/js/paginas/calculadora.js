@@ -57,13 +57,13 @@ class PaginaCalculadora extends Pagina {
     
         ctn.append(
             new CampoInformacion('Informacion', [
-                { titulo: 'Nombre', valor: this.calculadora.receta.nombre },
-                { titulo: 'Pasos', valor: this.calculadora.pasos().length },
                 { titulo: 'Subrecetas', valor: this.calculadora.subRecetas().length },
+                { titulo: 'Pasos', valor: this.calculadora.receta.pasos.length },
+                { titulo: 'Costo Menor (Materia Prima)', valor: `$ ${this.calculadora.costoMenor()}` },
+                { titulo: 'Costo Mayor (Materia Prima)', valor: `$ ${this.calculadora.costoMayor()}` },
                 {
                     titulo: 'Tiempo de Preparacion',
                     valor: this.calculadora.pasos().reduce((total, paso) => {
-                        console.log(total, paso.tiempo, paso);
                         return paso.tiempo ? sumarTiempos(total, paso.tiempo) : total;
                     }, '00:00')
                 },
@@ -80,6 +80,39 @@ class PaginaCalculadora extends Pagina {
     }
 
     personalizacion() {
-        return null;
+        const resultadosContenedor = $(`<div class="resultados"></div>`);
+
+        const camposVariaciones = Object.values(this.calculadora.ingredientes()).reduce((campos, ingrediente) => {
+            let variaciones = [];
+            if (ingrediente.ingrediente.variaciones) {
+                variaciones = ingrediente.ingrediente.variaciones.map((dat, indice) => {
+                    return { valor: indice, titulo: `${dat.marca} - ${dat.cantidad} ${dat.medida} - $${dat.precio}` }
+                })
+            }
+
+            campos[ingrediente.ingrediente.id] = Seleccion.Opciones({
+                titulo: ingrediente.ingrediente.nombre,
+                opciones: variaciones
+            })
+
+            return campos;
+        }, {});
+
+        const formulario = new Formulario({
+            campos: camposVariaciones,
+            alCambiar: () => resultadosContenedor.empty(),
+            alGuardar: (datos) => this.mostrarResultados(resultadosContenedor, datos)
+        })
+
+        return new CampoContenedor('Calculadora de Costo', [
+            formulario.render(),
+            resultadosContenedor
+        ]).render();
+    }
+
+    mostrarResultados(ctn, datos) {
+        const costo = this.calculadora.costoConVariaciones(datos);
+
+        ctn.append(`<h3>Costo de Materia Prima: $${costo}</h3>`);
     }
 }

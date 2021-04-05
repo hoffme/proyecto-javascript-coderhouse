@@ -1,7 +1,5 @@
 class CalculadoraRecetas {
-    constructor(receta) {
-        this.receta = receta;
-    }
+    constructor(receta) { this.receta = receta }
 
     pasos() {
         const pasosSimple = (receta) => {
@@ -21,6 +19,36 @@ class CalculadoraRecetas {
         }
     
         return pasosSimple(this.receta);
+    }
+
+    ingredientes() {
+        const ingredienteSimple = (receta) => {
+            let ingredientes = {};
+
+            receta.pasos.forEach(paso => {
+                if (paso.ingredientes) {
+                    paso.ingredientes.forEach(ingrediente => {
+                        if (!ingrediente.ingrediente.pasos) {
+                            if (!ingredientes[ingrediente.ingrediente.id]) {
+                                ingredientes[ingrediente.ingrediente.id] = {
+                                    ingrediente: ingrediente.ingrediente,
+                                    cantidad: 0,
+                                    unidad: ingrediente.unidad
+                                }
+                            }
+    
+                            ingredientes[ingrediente.ingrediente.id].cantidad += parseInt(ingrediente.cantidad);
+                        } else {
+                            ingredientes = {...ingredientes, ...ingredienteSimple(ingrediente.ingrediente)};
+                        }
+                    });
+                }
+            })
+
+            return ingredientes;
+        }
+    
+        return ingredienteSimple(this.receta);
     }
 
     subRecetas() {
@@ -56,8 +84,13 @@ class CalculadoraRecetas {
                 return varMin.precio * (ingrediente.cantidad / varMin.cantidad);
             }
 
-            ingrediente.ingrediente.pasos.reduce((costo, paso) => {
-                return costo + costoMenor(paso.ingrediente);
+            return ingrediente.ingrediente.pasos.reduce((costo, paso) => {
+                if (paso.ingredientes) {
+                    paso.ingredientes.forEach(ingrediente => {
+                        return costo += costoMenor(ingrediente);
+                    });
+                }
+                return costo;
             }, 0);
         }
 
@@ -75,11 +108,42 @@ class CalculadoraRecetas {
                 return varMax.precio * (ingrediente.cantidad / varMax.cantidad);
             }
 
-            ingrediente.ingrediente.pasos.reduce((costo, paso) => {
-                return costo + costoMayor(paso.ingrediente);
+            return ingrediente.ingrediente.pasos.reduce((costo, paso) => {
+                if (paso.ingredientes) {
+                    paso.ingredientes.forEach(ingrediente => {
+                        return costo += costoMayor(ingrediente);
+                    });
+                }
+                return costo;
             }, 0);
         }
 
         return costoMayor({ ingrediente: this.receta });
+    }
+
+    costoConVariaciones(variaciones) {
+        const calcularCosto = (ingrediente) => {
+            if (!ingrediente.ingrediente.pasos) {
+                if (ingrediente.ingrediente.variaciones.length === 0) return 0;
+
+                let indiceVariacion = variaciones[ingrediente.ingrediente.id];
+                if (indiceVariacion === undefined) indiceVariacion = 0;
+
+                const variacion = ingrediente.ingrediente.variaciones[indiceVariacion];
+
+                return variacion.precio * (ingrediente.cantidad / variacion.cantidad);
+            }
+
+            return ingrediente.ingrediente.pasos.reduce((costo, paso) => {
+                if (paso.ingredientes) {
+                    paso.ingredientes.forEach(ingrediente => {
+                        return costo += calcularCosto(ingrediente);
+                    });
+                }
+                return costo;
+            }, 0);
+        }
+
+        return calcularCosto({ ingrediente: this.receta });
     }
 }
