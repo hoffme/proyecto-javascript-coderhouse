@@ -17,3 +17,19 @@
 .contenido-calculadora .info-receta .datos div label {
     flex-basis: 50%;
 }
+
+.formulario-calculadora-costos .formulario {
+    display: flex;
+    flex-wrap: wrap;
+}
+.formulario-calculadora-costos .formulario .campo {
+    flex-basis: calc(50% - 2rem);
+}
+.formulario-calculadora-costos .formulario .boton {
+    flex-basis: 100%;
+}
+
+.resultados {
+    text-align: center;
+    color: #ccc;
+}

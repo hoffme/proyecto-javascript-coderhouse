@@ -36,7 +36,7 @@ class CampoInformacion extends Campo {
 }
 
 class CampoContenedor extends Campo {
-    constructor(titulo, html) { super(titulo, html) }
+    constructor(titulo, html, estilo) { super(titulo, html, undefined, estilo) }
     contenido() {
         const ctn = $('<div class="contenido"></div>');
         ctn.append(this.valor);

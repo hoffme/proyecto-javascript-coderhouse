@@ -100,19 +100,23 @@ class PaginaCalculadora extends Pagina {
 
         const formulario = new Formulario({
             campos: camposVariaciones,
-            alCambiar: () => resultadosContenedor.empty(),
             alGuardar: (datos) => this.mostrarResultados(resultadosContenedor, datos)
         })
 
+        const contenedorFormulario = $(`<div class="formulario-calculadora-costos"></div>`);
+        contenedorFormulario.append(formulario.render());
+
+        this.mostrarResultados(resultadosContenedor, {});
+
         return new CampoContenedor('Calculadora de Costo', [
-            formulario.render(),
-            resultadosContenedor
+            resultadosContenedor,
+            contenedorFormulario
         ]).render();
     }
 
     mostrarResultados(ctn, datos) {
+        ctn.empty();
         const costo = this.calculadora.costoConVariaciones(datos);
-
         ctn.append(`<h3>Costo de Materia Prima: $${costo}</h3>`);
     }
 }
